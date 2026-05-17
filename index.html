@@ -6,938 +6,1150 @@
   <title>우리동네 공동구매</title>
   <style>
     :root {
-      --bg: #f7f8fa;
-      --white: #ffffff;
-      --text: #191f28;
-      --sub: #6b7684;
-      --muted: #8b95a1;
-      --line: #e5e8eb;
-      --primary: #03c75a;
-      --primary-dark: #02b151;
-      --blue: #3182f6;
-      --red: #f04452;
-      --orange: #ff7a00;
-      --yellow: #fff7e8;
-      --shadow: 0 10px 30px rgba(0,0,0,.08);
-      --radius: 22px;
-      --safe-bottom: env(safe-area-inset-bottom);
+      --bg:#f6f7f9;
+      --card:#fff;
+      --text:#191f28;
+      --sub:#6b7684;
+      --muted:#8b95a1;
+      --line:#e5e8eb;
+      --green:#03c75a;
+      --green2:#00b050;
+      --blue:#3182f6;
+      --red:#f04452;
+      --orange:#ff7a00;
+      --black:#111827;
+      --shadow:0 12px 32px rgba(0,0,0,.08);
+      --softShadow:0 8px 22px rgba(0,0,0,.05);
+      --radius:22px;
+      --safeBottom:env(safe-area-inset-bottom);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing:border-box;
+    }
+
+    html {
+      scroll-behavior:smooth;
+    }
 
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.45;
-      -webkit-font-smoothing: antialiased;
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.45;
+      -webkit-font-smoothing:antialiased;
     }
 
-    button, input, textarea, select {
-      font: inherit;
+    button,input,textarea,select {
+      font:inherit;
     }
 
     button {
-      border: 0;
-      cursor: pointer;
+      border:0;
+      cursor:pointer;
     }
 
-    img {
-      max-width: 100%;
-      display: block;
+    a {
+      color:inherit;
+      text-decoration:none;
     }
 
     .app {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding-bottom: 120px;
+      max-width:1180px;
+      margin:0 auto;
+      padding-bottom:120px;
     }
 
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(247, 248, 250, .92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(229,232,235,.85);
+      position:sticky;
+      top:0;
+      z-index:80;
+      background:rgba(246,247,249,.94);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(229,232,235,.95);
     }
 
-    .topbar-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 14px 18px 12px;
+    .top-inner {
+      max-width:1180px;
+      margin:0 auto;
+      padding:13px 16px 12px;
     }
 
     .brand-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:11px;
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 900;
-      font-size: 20px;
-      letter-spacing: -0.5px;
+      display:flex;
+      align-items:center;
+      gap:9px;
+      font-weight:950;
+      font-size:20px;
+      letter-spacing:-.7px;
+      white-space:nowrap;
     }
 
     .brand-mark {
-      width: 34px;
-      height: 34px;
-      border-radius: 13px;
-      background: linear-gradient(135deg, #03c75a, #41d487);
-      color: white;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 8px 18px rgba(3,199,90,.25);
+      width:35px;
+      height:35px;
+      border-radius:13px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#03c75a,#48d990);
+      color:#fff;
+      box-shadow:0 8px 18px rgba(3,199,90,.25);
     }
 
     .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display:flex;
+      gap:7px;
+      align-items:center;
     }
 
-    .pill-btn {
-      padding: 9px 12px;
-      border-radius: 999px;
-      background: var(--white);
-      color: var(--text);
-      border: 1px solid var(--line);
-      font-weight: 800;
-      font-size: 13px;
+    .mini-btn {
+      min-height:38px;
+      padding:0 12px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid var(--line);
+      color:var(--text);
+      font-size:13px;
+      font-weight:900;
+      box-shadow:0 4px 10px rgba(0,0,0,.03);
     }
 
     .search-wrap {
-      position: relative;
-      margin-bottom: 12px;
+      position:relative;
+      margin-bottom:11px;
     }
 
     .search-wrap input {
-      width: 100%;
-      height: 48px;
-      border: 1px solid var(--line);
-      background: white;
-      border-radius: 16px;
-      padding: 0 16px 0 44px;
-      outline: none;
-      font-size: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.03);
+      width:100%;
+      height:50px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+      outline:none;
+      padding:0 16px 0 46px;
+      font-size:15px;
+      font-weight:700;
+      box-shadow:0 4px 12px rgba(0,0,0,.035);
+    }
+
+    .search-wrap input:focus {
+      border-color:var(--green);
+      box-shadow:0 0 0 4px rgba(3,199,90,.1);
     }
 
     .search-icon {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
+      position:absolute;
+      left:16px;
+      top:50%;
+      transform:translateY(-50%);
+      color:var(--muted);
+      font-size:20px;
     }
 
     .tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      scrollbar-width: none;
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      padding-bottom:2px;
+      scrollbar-width:none;
     }
 
     .tabs::-webkit-scrollbar {
-      display: none;
+      display:none;
     }
 
     .tab {
-      flex: 0 0 auto;
-      padding: 9px 14px;
-      border-radius: 999px;
-      background: white;
-      border: 1px solid var(--line);
-      color: var(--sub);
-      font-weight: 800;
-      font-size: 14px;
+      flex:0 0 auto;
+      min-height:38px;
+      padding:0 14px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid var(--line);
+      color:var(--sub);
+      font-size:14px;
+      font-weight:900;
     }
 
     .tab.active {
-      background: #111827;
-      border-color: #111827;
-      color: white;
+      background:var(--black);
+      border-color:var(--black);
+      color:#fff;
     }
 
     .page {
-      display: none;
-      padding: 18px;
-      animation: fadeIn .18s ease-out;
+      display:none;
+      padding:18px 16px;
+      animation:fade .18s ease;
     }
 
     .page.active {
-      display: block;
+      display:block;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes fade {
+      from { opacity:0; transform:translateY(6px); }
+      to { opacity:1; transform:translateY(0); }
     }
 
     .hero {
-      background: linear-gradient(135deg, #ffffff, #f1fff7);
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 22px;
-      margin-bottom: 18px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.05);
+      display:grid;
+      gap:18px;
+      background:linear-gradient(135deg,#fff,#effff6);
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:22px;
+      margin-bottom:18px;
+      box-shadow:var(--softShadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      right:-40px;
+      bottom:-55px;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:rgba(3,199,90,.12);
     }
 
     .hero h1 {
-      margin: 0 0 8px;
-      font-size: clamp(25px, 4vw, 38px);
-      letter-spacing: -1px;
-      line-height: 1.15;
+      position:relative;
+      z-index:1;
+      margin:0;
+      font-size:clamp(25px,4vw,40px);
+      line-height:1.13;
+      letter-spacing:-1.2px;
     }
 
     .hero p {
-      margin: 0;
-      color: var(--sub);
-      font-size: 15px;
-      font-weight: 650;
+      position:relative;
+      z-index:1;
+      margin:0;
+      color:var(--sub);
+      font-size:15px;
+      font-weight:700;
+      max-width:620px;
+    }
+
+    .hero-badges {
+      position:relative;
+      z-index:1;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .hero-badge {
+      padding:8px 11px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid var(--line);
+      font-size:13px;
+      font-weight:900;
+      color:#26313d;
+      box-shadow:0 5px 14px rgba(0,0,0,.04);
     }
 
     .section-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      margin: 22px 2px 12px;
-      gap: 10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:12px;
+      margin:22px 2px 12px;
     }
 
     .section-head h2 {
-      margin: 0;
-      font-size: 20px;
-      letter-spacing: -0.4px;
+      margin:0;
+      font-size:21px;
+      letter-spacing:-.5px;
     }
 
     .section-head span {
-      color: var(--sub);
-      font-weight: 700;
-      font-size: 13px;
+      color:var(--sub);
+      font-size:13px;
+      font-weight:900;
     }
 
     .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
     }
 
     .product-card {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,.045);
-      transition: transform .15s ease, box-shadow .15s ease;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:var(--softShadow);
+      transition:.16s ease;
     }
 
     .product-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow);
+      transform:translateY(-2px);
+      box-shadow:var(--shadow);
     }
 
-    .product-thumb {
-      position: relative;
-      aspect-ratio: 4 / 3;
-      overflow: hidden;
-      background: #eef2f6;
+    .thumb {
+      position:relative;
+      aspect-ratio:4/3;
+      background:var(--visual);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
     }
 
-    .product-visual {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      font-size: 56px;
-      background: var(--visual);
+    .thumb::before {
+      content:"";
+      position:absolute;
+      inset:18px;
+      border-radius:24px;
+      background:rgba(255,255,255,.24);
+      filter:blur(.2px);
     }
 
-    .badge-row {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
+    .emoji {
+      position:relative;
+      z-index:1;
+      font-size:62px;
+      filter:drop-shadow(0 8px 12px rgba(0,0,0,.12));
+    }
+
+    .badges {
+      position:absolute;
+      left:12px;
+      top:12px;
+      z-index:2;
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
     }
 
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 9px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
-      background: rgba(255,255,255,.92);
-      color: #111827;
-      box-shadow: 0 3px 10px rgba(0,0,0,.08);
+      display:inline-flex;
+      align-items:center;
+      min-height:27px;
+      padding:0 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.94);
+      color:#111827;
+      font-size:12px;
+      font-weight:950;
+      box-shadow:0 4px 12px rgba(0,0,0,.1);
     }
 
     .badge.hot {
-      color: #f04452;
+      color:var(--red);
     }
 
-    .product-body {
-      padding: 16px;
+    .badge.blue {
+      color:var(--blue);
+    }
+
+    .card-body {
+      padding:16px;
+    }
+
+    .category-line {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:8px;
+    }
+
+    .category {
+      color:var(--green2);
+      font-size:12px;
+      font-weight:950;
+    }
+
+    .rating {
+      color:#f59e0b;
+      font-size:12px;
+      font-weight:950;
     }
 
     .product-title {
-      margin: 0 0 6px;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: -0.3px;
+      margin:0 0 6px;
+      font-size:18px;
+      line-height:1.3;
+      letter-spacing:-.35px;
+      font-weight:950;
     }
 
-    .product-desc {
-      margin: 0 0 12px;
-      color: var(--sub);
-      font-size: 14px;
-      font-weight: 650;
-      min-height: 40px;
+    .desc {
+      min-height:39px;
+      margin:0 0 12px;
+      color:var(--sub);
+      font-size:14px;
+      font-weight:700;
     }
 
     .price-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 10px;
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
     }
 
     .price {
-      font-size: 24px;
-      font-weight: 950;
-      letter-spacing: -0.8px;
+      font-size:24px;
+      font-weight:1000;
+      letter-spacing:-.8px;
     }
 
     .stock {
-      color: var(--orange);
-      font-size: 13px;
-      font-weight: 900;
-      white-space: nowrap;
+      color:var(--orange);
+      font-size:13px;
+      font-weight:950;
+      white-space:nowrap;
     }
 
-    .curator-note {
-      background: #f5f7f9;
-      border-radius: 14px;
-      padding: 10px 12px;
-      color: #3d4752;
-      font-size: 13px;
-      font-weight: 750;
-      margin-bottom: 14px;
+    .original {
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      text-decoration:line-through;
+      margin-bottom:2px;
     }
 
-    .primary-btn, .secondary-btn, .ghost-btn, .danger-btn {
-      width: 100%;
-      min-height: 52px;
-      border-radius: 16px;
-      font-weight: 900;
-      font-size: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: transform .12s ease, background .12s ease, opacity .12s ease;
+    .curator {
+      background:#f6f7f9;
+      border-radius:15px;
+      padding:10px 12px;
+      color:#343c46;
+      font-size:13px;
+      font-weight:800;
+      margin:12px 0 14px;
     }
 
-    .primary-btn {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 8px 20px rgba(3,199,90,.26);
+    .btn {
+      width:100%;
+      min-height:52px;
+      border-radius:16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      font-size:16px;
+      font-weight:950;
+      transition:.12s ease;
     }
 
-    .primary-btn:hover {
-      background: var(--primary-dark);
+    .btn:active {
+      transform:scale(.985);
     }
 
-    .secondary-btn {
-      background: #111827;
-      color: white;
+    .btn-primary {
+      background:var(--green);
+      color:#fff;
+      box-shadow:0 9px 20px rgba(3,199,90,.24);
     }
 
-    .ghost-btn {
-      background: white;
-      color: var(--text);
-      border: 1px solid var(--line);
+    .btn-primary:hover {
+      background:var(--green2);
     }
 
-    .danger-btn {
-      background: #fff0f1;
-      color: var(--red);
-      border: 1px solid #ffd4d8;
+    .btn-dark {
+      background:var(--black);
+      color:#fff;
     }
 
-    .primary-btn:active, .secondary-btn:active, .ghost-btn:active {
-      transform: scale(.985);
+    .btn-ghost {
+      background:#fff;
+      color:var(--text);
+      border:1px solid var(--line);
     }
 
-    .detail-shell {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+    .btn-danger {
+      background:#fff0f1;
+      color:var(--red);
+      border:1px solid #ffd4d8;
     }
 
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      width: auto;
-      min-height: 40px;
-      padding: 0 12px;
-      border-radius: 999px;
-      background: white;
-      border: 1px solid var(--line);
-      font-weight: 900;
-      margin-bottom: 12px;
-    }
-
-    .detail-image-card, .detail-info-card, .soft-card {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      box-shadow: 0 8px 22px rgba(0,0,0,.045);
-      overflow: hidden;
-    }
-
-    .detail-main-visual {
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      font-size: clamp(92px, 20vw, 160px);
-      background: var(--visual);
-    }
-
-    .detail-info-card {
-      padding: 20px;
-    }
-
-    .meta-line {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .mini-chip {
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #eefbf4;
-      color: #008a3d;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .mini-chip.gray {
-      background: #f2f4f6;
-      color: var(--sub);
-    }
-
-    .detail-title {
-      margin: 0 0 10px;
-      font-size: clamp(25px, 4vw, 34px);
-      line-height: 1.18;
-      letter-spacing: -1px;
-    }
-
-    .detail-price {
-      font-size: 34px;
-      font-weight: 950;
-      letter-spacing: -1.2px;
-      margin: 8px 0 4px;
-    }
-
-    .shipping {
-      color: var(--sub);
-      font-weight: 750;
-      margin: 0 0 18px;
-    }
-
-    .qty-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #f7f8fa;
-      border-radius: 18px;
-      padding: 12px;
-      margin: 16px 0;
-    }
-
-    .qty-control {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 6px;
-    }
-
-    .qty-control button {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: #f2f4f6;
-      font-weight: 900;
-      font-size: 18px;
-    }
-
-    .qty-control strong {
-      min-width: 26px;
-      text-align: center;
-      font-size: 18px;
-    }
-
-    .total-box {
-      border-top: 1px solid var(--line);
-      padding-top: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 16px;
-    }
-
-    .total-box span {
-      color: var(--sub);
-      font-weight: 800;
-    }
-
-    .total-box strong {
-      font-size: 25px;
-      letter-spacing: -0.8px;
+    .back {
+      width:auto;
+      min-height:40px;
+      padding:0 13px;
+      margin-bottom:12px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid var(--line);
+      color:var(--text);
+      font-size:14px;
+      font-weight:950;
     }
 
     .stepper {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin: 0 0 16px;
-      overflow-x: auto;
-      scrollbar-width: none;
+      display:flex;
+      gap:7px;
+      overflow-x:auto;
+      margin-bottom:16px;
+      scrollbar-width:none;
     }
 
     .stepper::-webkit-scrollbar {
-      display: none;
+      display:none;
     }
 
     .step {
-      flex: 0 0 auto;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: #eef0f3;
-      color: var(--sub);
-      font-size: 12px;
-      font-weight: 900;
+      flex:0 0 auto;
+      min-height:32px;
+      padding:0 11px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      background:#e9edf1;
+      color:var(--sub);
+      font-size:12px;
+      font-weight:950;
     }
 
     .step.active {
-      background: #111827;
-      color: white;
+      background:var(--black);
+      color:#fff;
     }
 
-    .content-stack {
-      display: grid;
-      gap: 14px;
-      margin-top: 16px;
+    .detail-grid {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+
+    .detail-image,
+    .detail-box,
+    .soft-card,
+    .form-card {
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow:var(--softShadow);
+    }
+
+    .main-visual {
+      aspect-ratio:1/1;
+      display:grid;
+      place-items:center;
+      background:var(--visual);
+      position:relative;
+    }
+
+    .main-visual::before {
+      content:"";
+      position:absolute;
+      inset:34px;
+      border-radius:34px;
+      background:rgba(255,255,255,.22);
+    }
+
+    .main-visual span {
+      position:relative;
+      z-index:1;
+      font-size:clamp(95px,20vw,170px);
+      filter:drop-shadow(0 14px 18px rgba(0,0,0,.12));
+    }
+
+    .detail-box {
+      padding:20px;
+    }
+
+    .chips {
+      display:flex;
+      gap:7px;
+      flex-wrap:wrap;
+      margin-bottom:13px;
+    }
+
+    .chip {
+      padding:7px 10px;
+      border-radius:999px;
+      background:#eefbf4;
+      color:#008a3d;
+      font-size:12px;
+      font-weight:950;
+    }
+
+    .chip.gray {
+      background:#f2f4f6;
+      color:var(--sub);
+    }
+
+    .detail-title {
+      margin:0 0 8px;
+      font-size:clamp(25px,4vw,36px);
+      line-height:1.16;
+      letter-spacing:-1.1px;
+    }
+
+    .detail-desc {
+      margin:0 0 14px;
+      color:var(--sub);
+      font-size:15px;
+      font-weight:750;
+    }
+
+    .detail-price {
+      font-size:35px;
+      font-weight:1000;
+      letter-spacing:-1.2px;
+      margin:4px 0 2px;
+    }
+
+    .shipping {
+      margin:0 0 16px;
+      color:var(--sub);
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .buy-info {
+      display:grid;
+      gap:10px;
+      margin:14px 0;
+      background:#f7f8fa;
+      border-radius:18px;
+      padding:13px;
+    }
+
+    .info-line {
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      color:#3d4752;
+      font-size:14px;
+      font-weight:850;
+    }
+
+    .info-line strong {
+      color:var(--text);
+      text-align:right;
+    }
+
+    .qty-box {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      background:#f7f8fa;
+      border-radius:18px;
+      padding:12px;
+      margin:16px 0;
+    }
+
+    .qty-box > strong {
+      font-size:15px;
+    }
+
+    .qty-control {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:999px;
+      padding:6px;
+    }
+
+    .qty-control button {
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:#f2f4f6;
+      color:var(--text);
+      font-size:19px;
+      font-weight:950;
+    }
+
+    .qty-control strong {
+      min-width:28px;
+      text-align:center;
+      font-size:18px;
+      font-weight:950;
+    }
+
+    .total {
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:14px;
+      padding-top:16px;
+      border-top:1px solid var(--line);
+      margin-bottom:16px;
+    }
+
+    .total span {
+      color:var(--sub);
+      font-size:14px;
+      font-weight:900;
+    }
+
+    .total strong {
+      font-size:25px;
+      font-weight:1000;
+      letter-spacing:-.8px;
+      text-align:right;
+    }
+
+    .source-btn {
+      display:inline-flex;
+      width:100%;
+      min-height:46px;
+      margin-top:10px;
+      align-items:center;
+      justify-content:center;
+      border-radius:15px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:#3d4752;
+      font-size:14px;
+      font-weight:950;
+    }
+
+    .stack {
+      display:grid;
+      gap:14px;
+      margin-top:16px;
     }
 
     .soft-card {
-      padding: 18px;
+      padding:18px;
     }
 
     .soft-card h3 {
-      margin: 0 0 10px;
-      font-size: 19px;
-      letter-spacing: -0.3px;
+      margin:0 0 10px;
+      font-size:19px;
+      letter-spacing:-.4px;
     }
 
     .soft-card p {
-      margin: 0;
-      color: var(--sub);
-      font-weight: 650;
+      margin:0;
+      color:var(--sub);
+      font-weight:750;
     }
 
     .recommend {
-      background: linear-gradient(135deg, #fffaf0, #ffffff);
-      border-color: #ffe2ad;
+      background:linear-gradient(135deg,#fffaf0,#fff);
+      border-color:#ffe2ad;
     }
 
-    .detail-long-image {
-      min-height: 420px;
-      border-radius: 22px;
+    .detail-banner {
+      min-height:430px;
+      border-radius:24px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:24px;
       background:
-        radial-gradient(circle at 30% 20%, rgba(255,255,255,.85), transparent 25%),
-        linear-gradient(180deg, #fff6e5, #eefbf4);
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 26px;
-      color: #27313d;
+        radial-gradient(circle at 26% 18%, rgba(255,255,255,.78), transparent 25%),
+        var(--visual);
+      overflow:hidden;
     }
 
-    .detail-long-image .big {
-      font-size: 92px;
-      line-height: 1;
-      margin-bottom: 18px;
+    .detail-banner .big {
+      font-size:96px;
+      line-height:1;
+      margin-bottom:18px;
     }
 
-    .detail-long-image h3 {
-      font-size: 27px;
-      margin: 0 0 8px;
-      letter-spacing: -0.8px;
+    .detail-banner h3 {
+      margin:0 0 8px;
+      font-size:28px;
+      line-height:1.2;
+      letter-spacing:-1px;
     }
 
-    .feature-list, .notice-list {
-      display: grid;
-      gap: 10px;
-      padding: 0;
-      margin: 0;
-      list-style: none;
+    .detail-banner p {
+      max-width:520px;
+      margin:0 auto;
+      color:#3d4752;
+      font-weight:850;
     }
 
-    .feature-list li, .notice-list li {
-      padding: 13px 14px;
-      border-radius: 15px;
-      background: #f7f8fa;
-      color: #3d4752;
-      font-weight: 750;
+    .feature-grid {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
     }
 
-    .form-shell, .confirm-shell, .complete-shell, .orders-shell {
-      max-width: 760px;
-      margin: 0 auto;
+    .feature {
+      padding:14px;
+      border-radius:16px;
+      background:#f7f8fa;
+      color:#334155;
+      font-size:14px;
+      font-weight:850;
+    }
+
+    .notice-list {
+      display:grid;
+      gap:10px;
+      padding:0;
+      margin:0;
+      list-style:none;
+    }
+
+    .notice-list li {
+      padding:13px 14px;
+      border-radius:16px;
+      background:#f7f8fa;
+      color:#3d4752;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .form-shell,
+    .confirm-shell,
+    .complete-shell,
+    .orders-shell {
+      max-width:780px;
+      margin:0 auto;
     }
 
     .form-card {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 20px;
-      box-shadow: var(--shadow);
+      padding:20px;
     }
 
     .form-title {
-      margin: 0 0 6px;
-      font-size: 25px;
-      letter-spacing: -0.7px;
+      margin:0 0 6px;
+      font-size:26px;
+      letter-spacing:-.8px;
     }
 
     .form-sub {
-      margin: 0 0 18px;
-      color: var(--sub);
-      font-weight: 650;
+      margin:0 0 18px;
+      color:var(--sub);
+      font-weight:750;
     }
 
     .form-grid {
-      display: grid;
-      gap: 14px;
+      display:grid;
+      gap:14px;
     }
 
     .field label {
-      display: block;
-      margin-bottom: 7px;
-      font-size: 14px;
-      font-weight: 900;
-      color: #343c46;
+      display:block;
+      margin-bottom:7px;
+      color:#343c46;
+      font-size:14px;
+      font-weight:950;
     }
 
-    .field input, .field textarea, .field select {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: #fbfcfd;
-      border-radius: 15px;
-      min-height: 52px;
-      padding: 13px 14px;
-      outline: none;
-      font-size: 16px;
+    .field input,
+    .field textarea,
+    .field select {
+      width:100%;
+      min-height:52px;
+      border:1px solid var(--line);
+      border-radius:15px;
+      background:#fbfcfd;
+      outline:none;
+      padding:13px 14px;
+      font-size:16px;
+      font-weight:700;
     }
 
     .field textarea {
-      min-height: 96px;
-      resize: vertical;
+      min-height:96px;
+      resize:vertical;
     }
 
-    .field input:focus, .field textarea:focus, .field select:focus {
-      border-color: var(--primary);
-      background: white;
-      box-shadow: 0 0 0 4px rgba(3,199,90,.10);
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color:var(--green);
+      background:#fff;
+      box-shadow:0 0 0 4px rgba(3,199,90,.1);
     }
 
-    .agree-box {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      padding: 14px;
-      background: #f7f8fa;
-      border-radius: 16px;
-      color: #3d4752;
-      font-weight: 750;
-      font-size: 14px;
+    .agree {
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:14px;
+      border-radius:16px;
+      background:#f7f8fa;
+      color:#3d4752;
+      font-size:14px;
+      font-weight:800;
     }
 
-    .agree-box input {
-      width: 20px;
-      height: 20px;
-      margin-top: 1px;
-      accent-color: var(--primary);
+    .agree input {
+      width:20px;
+      height:20px;
+      margin-top:1px;
+      accent-color:var(--green);
     }
 
-    .summary-box {
-      background: #f7f8fa;
-      border-radius: 20px;
-      padding: 16px;
-      display: grid;
-      gap: 9px;
-      margin: 16px 0;
+    .summary {
+      display:grid;
+      gap:9px;
+      margin:16px 0;
+      padding:16px;
+      border-radius:20px;
+      background:#f7f8fa;
     }
 
     .summary-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      color: #3d4752;
-      font-weight: 750;
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      color:#3d4752;
+      font-size:14px;
+      font-weight:850;
     }
 
-    .summary-line.total {
-      border-top: 1px solid var(--line);
-      padding-top: 12px;
-      color: var(--text);
-      font-size: 18px;
-      font-weight: 950;
+    .summary-line.final {
+      border-top:1px solid var(--line);
+      padding-top:12px;
+      color:var(--text);
+      font-size:18px;
+      font-weight:1000;
     }
 
     .error {
-      display: none;
-      color: var(--red);
-      background: #fff0f1;
-      border: 1px solid #ffd4d8;
-      padding: 12px 14px;
-      border-radius: 15px;
-      font-weight: 850;
-      margin-bottom: 14px;
+      display:none;
+      padding:12px 14px;
+      border-radius:15px;
+      background:#fff0f1;
+      border:1px solid #ffd4d8;
+      color:var(--red);
+      font-size:14px;
+      font-weight:900;
+      margin-bottom:14px;
     }
 
     .error.show {
-      display: block;
+      display:block;
     }
 
-    .button-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 14px;
+    .btn-row {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:14px;
     }
 
     .confirm-list {
-      display: grid;
-      gap: 10px;
-      margin: 18px 0;
+      display:grid;
+      gap:10px;
+      margin:18px 0;
     }
 
     .confirm-item {
-      display: grid;
-      grid-template-columns: 115px 1fr;
-      gap: 12px;
-      padding: 14px;
-      background: #f7f8fa;
-      border-radius: 16px;
+      display:grid;
+      grid-template-columns:116px 1fr;
+      gap:12px;
+      padding:14px;
+      border-radius:16px;
+      background:#f7f8fa;
     }
 
     .confirm-item span {
-      color: var(--sub);
-      font-weight: 850;
+      color:var(--sub);
+      font-size:14px;
+      font-weight:900;
     }
 
     .confirm-item strong {
-      text-align: right;
-      word-break: keep-all;
+      text-align:right;
+      word-break:keep-all;
+      font-size:14px;
+      font-weight:950;
     }
 
     .complete-card {
-      text-align: center;
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      padding: 30px 20px;
-      box-shadow: var(--shadow);
+      text-align:center;
+      padding:30px 20px;
+      border-radius:30px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
     }
 
-    .check-icon {
-      width: 82px;
-      height: 82px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #03c75a, #5ee493);
-      color: white;
-      display: grid;
-      place-items: center;
-      font-size: 42px;
-      margin: 0 auto 16px;
-      box-shadow: 0 14px 32px rgba(3,199,90,.3);
+    .check {
+      width:82px;
+      height:82px;
+      margin:0 auto 16px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#03c75a,#5ee493);
+      color:#fff;
+      font-size:44px;
+      font-weight:950;
+      box-shadow:0 14px 32px rgba(3,199,90,.3);
     }
 
     .complete-card h2 {
-      margin: 0 0 8px;
-      font-size: 28px;
-      letter-spacing: -0.9px;
+      margin:0 0 8px;
+      font-size:28px;
+      letter-spacing:-.9px;
     }
 
-    .complete-card p {
-      margin: 0;
-      color: var(--sub);
-      font-weight: 700;
-    }
-
-    .complete-summary {
-      text-align: left;
-      margin: 22px 0;
+    .complete-card > p {
+      margin:0;
+      color:var(--sub);
+      font-weight:800;
     }
 
     .orders-list {
-      display: grid;
-      gap: 12px;
+      display:grid;
+      gap:12px;
     }
 
     .order-card {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,.045);
+      padding:16px;
+      border-radius:22px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--softShadow);
     }
 
     .order-card h3 {
-      margin: 0 0 8px;
-      font-size: 17px;
+      margin:0 0 8px;
+      font-size:17px;
+      line-height:1.35;
     }
 
     .order-meta {
-      display: grid;
-      gap: 6px;
-      color: var(--sub);
-      font-size: 14px;
-      font-weight: 750;
-    }
-
-    .fixed-buy {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 60;
-      padding: 12px 16px calc(12px + var(--safe-bottom));
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(14px);
-      border-top: 1px solid var(--line);
-      display: none;
-    }
-
-    .fixed-buy.show {
-      display: block;
-    }
-
-    .fixed-buy-inner {
-      max-width: 760px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .fixed-price {
-      font-weight: 950;
-      letter-spacing: -0.7px;
-    }
-
-    .fixed-price small {
-      display: block;
-      color: var(--sub);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0;
+      display:grid;
+      gap:6px;
+      color:var(--sub);
+      font-size:14px;
+      font-weight:800;
     }
 
     .empty {
-      background: white;
-      border: 1px dashed #cfd6dd;
-      border-radius: 22px;
-      padding: 30px 18px;
-      text-align: center;
-      color: var(--sub);
-      font-weight: 800;
+      padding:30px 18px;
+      border:1px dashed #cfd6dd;
+      border-radius:22px;
+      background:#fff;
+      text-align:center;
+      color:var(--sub);
+      font-weight:900;
     }
 
-    @media (min-width: 640px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .fixed-buy {
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:90;
+      display:none;
+      padding:12px 16px calc(12px + var(--safeBottom));
+      background:rgba(255,255,255,.94);
+      backdrop-filter:blur(16px);
+      border-top:1px solid var(--line);
+    }
 
-      .button-row {
-        grid-template-columns: 1fr 1fr;
+    .fixed-buy.show {
+      display:block;
+    }
+
+    .fixed-inner {
+      max-width:780px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr 1.4fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    .fixed-price {
+      font-size:18px;
+      font-weight:1000;
+      letter-spacing:-.7px;
+    }
+
+    .fixed-price small {
+      display:block;
+      color:var(--sub);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:0;
+    }
+
+    @media (min-width:640px) {
+      .grid {
+        grid-template-columns:repeat(2,1fr);
       }
 
       .form-grid.two {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns:1fr 1fr;
+      }
+
+      .btn-row {
+        grid-template-columns:1fr 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns:repeat(3,1fr);
       }
     }
 
-    @media (min-width: 960px) {
-      .topbar-inner {
-        padding-left: 24px;
-        padding-right: 24px;
+    @media (min-width:960px) {
+      .top-inner {
+        padding-left:24px;
+        padding-right:24px;
       }
 
       .page {
-        padding: 24px;
+        padding:24px;
       }
 
       .grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns:repeat(3,1fr);
       }
 
-      .detail-shell {
-        grid-template-columns: 1.05fr .95fr;
-        align-items: start;
+      .detail-grid {
+        grid-template-columns:1.04fr .96fr;
+        align-items:start;
       }
 
-      .detail-info-card {
-        position: sticky;
-        top: 142px;
+      .detail-box {
+        position:sticky;
+        top:142px;
       }
 
       .fixed-buy.show {
-        display: none;
+        display:none;
       }
     }
   </style>
 </head>
+
 <body>
-  <header class="topbar" id="topbar">
-    <div class="topbar-inner">
+  <header class="topbar">
+    <div class="top-inner">
       <div class="brand-row">
-        <div class="brand" onclick="goList()" role="button" tabindex="0">
-          <div class="brand-mark">동</div>
+        <button class="brand" onclick="goList()" aria-label="상품 목록으로 이동" style="background:transparent;padding:0;">
+          <span class="brand-mark">동</span>
           <span>우리동네 공동구매</span>
-        </div>
+        </button>
         <div class="top-actions">
-          <button class="pill-btn" onclick="goOrders()">주문내역</button>
+          <button class="mini-btn" onclick="goOrders()">주문내역</button>
         </div>
       </div>
 
       <div id="listControls">
         <div class="search-wrap">
           <span class="search-icon">⌕</span>
-          <input id="searchInput" type="search" placeholder="상품명을 검색해보세요" oninput="renderProducts()" />
+          <input id="searchInput" type="search" placeholder="상품명, 브랜드, 카테고리 검색" oninput="renderProducts()" />
         </div>
         <nav class="tabs" id="categoryTabs"></nav>
       </div>
@@ -947,19 +1159,26 @@
   <main class="app">
     <section class="page active" id="listPage">
       <div class="hero">
-        <h1>동네 큐레이터가 고른<br />믿을 수 있는 공동구매</h1>
-        <p>부모님께 보내기 좋은 식품·건강간식·선물세트를 한 곳에서 간편하게 주문하세요.</p>
+        <h1>동네 큐레이터가 고른<br />실속 공동구매 상품</h1>
+        <p>부모님 선물, 건강식품, 간편식, 생활용품까지. 실제 판매 상품을 기반으로 공동구매 화면을 구성했습니다.</p>
+        <div class="hero-badges">
+          <span class="hero-badge">오늘의 공동구매</span>
+          <span class="hero-badge">큐레이터 추천</span>
+          <span class="hero-badge">모바일 간편 주문</span>
+        </div>
       </div>
 
       <div class="section-head">
         <h2>공동구매 상품</h2>
         <span id="productCount">0개 상품</span>
       </div>
+
       <div class="grid" id="productGrid"></div>
     </section>
 
     <section class="page" id="detailPage">
-      <button class="back-btn" onclick="goList()">← 목록으로</button>
+      <button class="back" onclick="goList()">← 목록으로</button>
+
       <div class="stepper">
         <span class="step active">상품 선택</span>
         <span class="step">주문 정보</span>
@@ -967,57 +1186,82 @@
         <span class="step">완료</span>
       </div>
 
-      <div class="detail-shell">
-        <div class="detail-image-card">
-          <div class="detail-main-visual" id="detailVisual"></div>
+      <div class="detail-grid">
+        <div class="detail-image">
+          <div class="main-visual" id="detailVisual">
+            <span id="detailEmoji"></span>
+          </div>
         </div>
 
-        <aside class="detail-info-card">
-          <div class="meta-line" id="detailChips"></div>
+        <aside class="detail-box">
+          <div class="chips" id="detailChips"></div>
           <h1 class="detail-title" id="detailTitle"></h1>
+          <p class="detail-desc" id="detailDesc"></p>
+          <div class="original" id="detailOriginal"></div>
           <div class="detail-price" id="detailPrice"></div>
           <p class="shipping" id="detailShipping"></p>
+
+          <div class="buy-info">
+            <div class="info-line">
+              <span>판매처 참고</span>
+              <strong id="detailSource"></strong>
+            </div>
+            <div class="info-line">
+              <span>공동구매 마감</span>
+              <strong id="detailDeadline"></strong>
+            </div>
+            <div class="info-line">
+              <span>남은 수량</span>
+              <strong id="detailStock"></strong>
+            </div>
+          </div>
 
           <div class="qty-box">
             <strong>수량 선택</strong>
             <div class="qty-control">
-              <button onclick="changeQty(-1)">−</button>
+              <button onclick="changeQty(-1)" aria-label="수량 감소">−</button>
               <strong id="detailQty">1</strong>
-              <button onclick="changeQty(1)">+</button>
+              <button onclick="changeQty(1)" aria-label="수량 증가">+</button>
             </div>
           </div>
 
-          <div class="total-box">
+          <div class="total">
             <span>총 결제 예정 금액</span>
             <strong id="detailTotal"></strong>
           </div>
 
-          <button class="primary-btn" onclick="goOrderForm()">주문하기</button>
+          <button class="btn btn-primary" onclick="goOrderForm()">주문하기</button>
+          <a class="source-btn" id="sourceLink" href="#" target="_blank" rel="noopener">원문 상품 페이지 보기</a>
         </aside>
       </div>
 
-      <div class="content-stack">
+      <div class="stack">
         <div class="soft-card recommend">
           <h3 id="curatorTitle"></h3>
           <p id="curatorDesc"></p>
         </div>
 
         <div class="soft-card">
-          <div class="detail-long-image" id="longDetailImage"></div>
+          <div class="detail-banner" id="detailBanner"></div>
         </div>
 
         <div class="soft-card">
-          <h3>상품 특징</h3>
-          <ul class="feature-list" id="featureList"></ul>
+          <h3>상품 핵심 포인트</h3>
+          <div class="feature-grid" id="featureGrid"></div>
+        </div>
+
+        <div class="soft-card">
+          <h3>상세 설명</h3>
+          <ul class="notice-list" id="detailTextList"></ul>
         </div>
 
         <div class="soft-card">
           <h3>배송/교환 안내</h3>
           <ul class="notice-list">
-            <li>공동구매 상품은 주문 후 순차 배송됩니다.</li>
-            <li>제주/도서산간 지역은 배송비가 추가될 수 있습니다.</li>
-            <li>신선식품 특성상 단순 변심 교환은 제한될 수 있습니다.</li>
-            <li>재고 소진 시 조기 마감될 수 있습니다.</li>
+            <li>공동구매 상품은 주문 접수 후 순차 배송됩니다.</li>
+            <li>상품별 배송비와 도착일은 실제 판매처 정책에 따라 달라질 수 있습니다.</li>
+            <li>신선식품은 단순 변심 교환/반품이 제한될 수 있습니다.</li>
+            <li>재고 소진 시 공동구매가 조기 마감될 수 있습니다.</li>
           </ul>
         </div>
 
@@ -1026,8 +1270,8 @@
           <ul class="notice-list">
             <li>입력한 연락처로 주문 확인 연락이 갈 수 있습니다.</li>
             <li>주소와 상세 주소를 정확히 입력해주세요.</li>
-            <li>공동구매 마감 후 상품 준비가 시작됩니다.</li>
-            <li>담당 큐레이터 또는 운영자가 배송 상황을 안내드릴 수 있습니다.</li>
+            <li>상품 가격은 mock 데이터이며 실제 판매가와 다를 수 있습니다.</li>
+            <li>운영 투입 시 결제/배송/재고 API 연동이 필요합니다.</li>
           </ul>
         </div>
       </div>
@@ -1035,7 +1279,8 @@
 
     <section class="page" id="formPage">
       <div class="form-shell">
-        <button class="back-btn" onclick="goDetail()">← 상품 상세로</button>
+        <button class="back" onclick="goDetail()">← 상품 상세로</button>
+
         <div class="stepper">
           <span class="step">상품 선택</span>
           <span class="step active">주문 정보</span>
@@ -1045,15 +1290,16 @@
 
         <div class="form-card">
           <h2 class="form-title">주문 정보를 입력해주세요</h2>
-          <p class="form-sub">정확한 배송을 위해 이름, 연락처, 주소를 확인합니다.</p>
+          <p class="form-sub">배송과 주문 확인을 위해 필요한 정보입니다.</p>
 
           <div class="error" id="formError"></div>
 
           <div class="form-grid two">
             <div class="field">
               <label for="buyerName">구매자 이름</label>
-              <input id="buyerName" placeholder="예: 김철수" autocomplete="name" />
+              <input id="buyerName" placeholder="예: 김영희" autocomplete="name" />
             </div>
+
             <div class="field">
               <label for="buyerPhone">연락처</label>
               <input id="buyerPhone" placeholder="예: 010-1234-5678" autocomplete="tel" />
@@ -1065,10 +1311,12 @@
               <label for="buyerAddress">주소</label>
               <input id="buyerAddress" placeholder="예: 서울시 강남구 테헤란로 00" autocomplete="street-address" />
             </div>
+
             <div class="field">
               <label for="buyerAddressDetail">상세 주소</label>
               <input id="buyerAddressDetail" placeholder="예: 101동 1001호" />
             </div>
+
             <div class="field">
               <label for="formQty">수량</label>
               <select id="formQty" onchange="syncFormQty()">
@@ -1084,17 +1332,19 @@
                 <option value="10">10개</option>
               </select>
             </div>
+
             <div class="field">
               <label for="buyerRequest">요청사항</label>
               <textarea id="buyerRequest" placeholder="배송 시 요청사항이 있으면 입력해주세요."></textarea>
             </div>
-            <label class="agree-box">
+
+            <label class="agree">
               <input id="agreePrivacy" type="checkbox" />
               <span>주문 확인 및 배송 안내를 위한 개인정보 수집·이용에 동의합니다.</span>
             </label>
           </div>
 
-          <div class="summary-box">
+          <div class="summary">
             <div class="summary-line">
               <span>상품 금액</span>
               <strong id="formProductPrice"></strong>
@@ -1103,20 +1353,21 @@
               <span>수량</span>
               <strong id="formSummaryQty"></strong>
             </div>
-            <div class="summary-line total">
+            <div class="summary-line final">
               <span>총 주문 금액</span>
               <strong id="formTotal"></strong>
             </div>
           </div>
 
-          <button class="primary-btn" onclick="validateAndGoConfirm()">주문 확인하기</button>
+          <button class="btn btn-primary" onclick="validateAndGoConfirm()">주문 확인하기</button>
         </div>
       </div>
     </section>
 
     <section class="page" id="confirmPage">
       <div class="confirm-shell">
-        <button class="back-btn" onclick="goOrderForm()">← 주문 정보 수정</button>
+        <button class="back" onclick="goOrderForm()">← 주문 정보 수정</button>
+
         <div class="stepper">
           <span class="step">상품 선택</span>
           <span class="step">주문 정보</span>
@@ -1130,9 +1381,9 @@
 
           <div class="confirm-list" id="confirmList"></div>
 
-          <div class="button-row">
-            <button class="ghost-btn" onclick="goOrderForm()">이전으로</button>
-            <button class="primary-btn" onclick="completeOrder()">주문 완료하기</button>
+          <div class="btn-row">
+            <button class="btn btn-ghost" onclick="goOrderForm()">이전으로</button>
+            <button class="btn btn-primary" onclick="completeOrder()">주문 완료하기</button>
           </div>
         </div>
       </div>
@@ -1148,20 +1399,20 @@
         </div>
 
         <div class="complete-card">
-          <div class="check-icon">✓</div>
+          <div class="check">✓</div>
           <h2>주문이 완료되었습니다</h2>
           <p>주문이 정상적으로 접수되었습니다.</p>
 
-          <div class="complete-summary confirm-list" id="completeSummary"></div>
+          <div class="confirm-list" id="completeSummary"></div>
 
-          <div class="soft-card" style="text-align:left; box-shadow:none;">
+          <div class="soft-card" style="text-align:left;box-shadow:none;">
             <h3>배송 안내</h3>
             <p>상품 준비가 시작되면 담당 큐레이터 또는 운영자가 안내드릴 수 있습니다. 입력하신 연락처로 주문 확인 연락이 갈 수 있습니다.</p>
           </div>
 
-          <div class="button-row">
-            <button class="ghost-btn" onclick="goList()">다른 상품 더 보기</button>
-            <button class="secondary-btn" onclick="goOrders()">주문 내역 확인</button>
+          <div class="btn-row">
+            <button class="btn btn-ghost" onclick="goList()">다른 상품 더 보기</button>
+            <button class="btn btn-dark" onclick="goOrders()">주문 내역 확인</button>
           </div>
         </div>
       </div>
@@ -1169,14 +1420,17 @@
 
     <section class="page" id="ordersPage">
       <div class="orders-shell">
-        <button class="back-btn" onclick="goList()">← 쇼핑 계속하기</button>
+        <button class="back" onclick="goList()">← 쇼핑 계속하기</button>
+
         <div class="form-card">
           <h2 class="form-title">주문 내역</h2>
-          <p class="form-sub">이 브라우저의 localStorage에 저장된 mock 주문 데이터입니다.</p>
+          <p class="form-sub">현재 브라우저 localStorage에 저장된 mock 주문 데이터입니다.</p>
+
           <div class="orders-list" id="ordersList"></div>
-          <div class="button-row">
-            <button class="ghost-btn" onclick="goList()">상품 보러가기</button>
-            <button class="danger-btn" onclick="clearOrders()">주문 내역 삭제</button>
+
+          <div class="btn-row">
+            <button class="btn btn-ghost" onclick="goList()">상품 보러가기</button>
+            <button class="btn btn-danger" onclick="clearOrders()">주문 내역 삭제</button>
           </div>
         </div>
       </div>
@@ -1184,204 +1438,764 @@
   </main>
 
   <div class="fixed-buy" id="fixedBuy">
-    <div class="fixed-buy-inner">
+    <div class="fixed-inner">
       <div class="fixed-price">
         <small>총 결제 예정 금액</small>
         <span id="fixedTotal">0원</span>
       </div>
-      <button class="primary-btn" onclick="goOrderForm()">주문하기</button>
+      <button class="btn btn-primary" onclick="goOrderForm()">주문하기</button>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = "senior_groupbuy_orders_v1";
-
-    const products = [
-      {
-        id: "p001",
-        name: "프리미엄 제주 감귤 5kg",
-        category: "과일",
-        description: "달콤하고 신선한 산지 직송 감귤",
-        price: 29900,
-        curatorName: "김영희",
-        curatorId: "curator_001",
-        curatorLine: "부모님 간식으로 좋아요.",
-        curatorDesc: "동네 주민분들이 부담 없이 드실 수 있는 상품 위주로 골랐어요. 이번 상품은 당도가 좋고 가족 간식이나 선물용으로도 괜찮습니다.",
-        stock: 24,
-        emoji: "🍊",
-        visual: "linear-gradient(135deg, #fff4d8, #ffd58a)",
-        shipping: "무료배송 · 주문 후 순차 배송",
-        commissionRate: 0.08,
-        features: ["산지 직송 신선 과일", "공동구매 특가 구성", "부모님 간식용 추천"]
-      },
-      {
-        id: "p002",
-        name: "국내산 햇고구마 3kg",
-        category: "건강간식",
-        description: "에어프라이어에 구우면 달콤한 고구마",
-        price: 19900,
-        curatorName: "박미자",
-        curatorId: "curator_002",
-        curatorLine: "아침 식사 대용으로 추천해요.",
-        curatorDesc: "속이 편하고 조리도 간단해서 아침 대용으로 좋은 상품입니다. 부모님 댁에 보내드리기에도 부담 없는 구성이에요.",
-        stock: 31,
-        emoji: "🍠",
-        visual: "linear-gradient(135deg, #fff0e8, #d19a73)",
-        shipping: "무료배송 · 신선식품 순차 발송",
-        commissionRate: 0.08,
-        features: ["국내산 햇고구마", "간편 조리 가능", "건강 간식 추천"]
-      },
-      {
-        id: "p003",
-        name: "저당 단백질 두유 24팩",
-        category: "건강식품",
-        description: "당 부담을 줄인 고소한 두유",
-        price: 32000,
-        curatorName: "이정숙",
-        curatorId: "curator_003",
-        curatorLine: "운동 후나 간식으로 좋아요.",
-        curatorDesc: "당 부담을 낮추고 단백질을 챙길 수 있어 간식 대용으로 추천합니다. 냉장고에 두고 하나씩 꺼내 마시기 좋아요.",
-        stock: 18,
-        emoji: "🥛",
-        visual: "linear-gradient(135deg, #f3f8ff, #b6d7ff)",
-        shipping: "무료배송 · 평일 기준 2~4일",
-        commissionRate: 0.1,
-        features: ["저당 설계", "단백질 보충", "24팩 실속 구성"]
-      },
-      {
-        id: "p004",
-        name: "시니어 관절 건강 간식 세트",
-        category: "건강식품",
-        description: "부모님 선물용 건강 간식 구성",
-        price: 45000,
-        curatorName: "김영희",
-        curatorId: "curator_001",
-        curatorLine: "명절 선물로 반응이 좋아요.",
-        curatorDesc: "부담스럽지 않은 가격대의 건강 간식 세트입니다. 부모님 선물용으로 문의가 많은 상품이라 준비했습니다.",
-        stock: 12,
-        emoji: "🎁",
-        visual: "linear-gradient(135deg, #fff3f5, #ffd1dc)",
-        shipping: "무료배송 · 선물 포장 가능",
-        commissionRate: 0.12,
-        features: ["부모님 선물 추천", "건강 간식 구성", "명절 선물용 인기"]
-      },
-      {
-        id: "p005",
-        name: "국산 들기름 선물세트",
-        category: "선물세트",
-        description: "고소한 향이 진한 국산 들기름",
-        price: 38000,
-        curatorName: "최순자",
-        curatorId: "curator_004",
-        curatorLine: "집밥 자주 드시는 분께 추천해요.",
-        curatorDesc: "집밥을 자주 드시는 가정에 실용적인 선물입니다. 향이 진하고 포장 구성이 깔끔합니다.",
-        stock: 20,
-        emoji: "🫙",
-        visual: "linear-gradient(135deg, #fff8dd, #e9c46a)",
-        shipping: "무료배송 · 안전 포장 발송",
-        commissionRate: 0.1,
-        features: ["국산 원재료", "실속 선물세트", "집밥 필수품"]
-      },
-      {
-        id: "p006",
-        name: "간편 조리 삼계탕 5팩",
-        category: "간편식",
-        description: "데우기만 하면 되는 든든한 보양식",
-        price: 49000,
-        curatorName: "박미자",
-        curatorId: "curator_002",
-        curatorLine: "혼자 사시는 부모님께 좋아요.",
-        curatorDesc: "조리 부담이 적은 간편식입니다. 식사를 챙기기 어려운 날에도 든든하게 드실 수 있어 추천합니다.",
-        stock: 16,
-        emoji: "🍲",
-        visual: "linear-gradient(135deg, #fff7ed, #ffc48d)",
-        shipping: "무료배송 · 냉장/냉동 포장",
-        commissionRate: 0.1,
-        features: ["간편 조리", "보양식 구성", "1인 가구 추천"]
-      },
-      {
-        id: "p007",
-        name: "무농약 현미 누룽지 세트",
-        category: "건강간식",
-        description: "구수하고 속 편한 간식",
-        price: 24900,
-        curatorName: "이정숙",
-        curatorId: "curator_003",
-        curatorLine: "아침에 따뜻하게 드시기 좋아요.",
-        curatorDesc: "따뜻한 물에 불려 간편하게 드실 수 있는 누룽지 세트입니다. 속이 편한 간식을 찾는 분께 좋습니다.",
-        stock: 27,
-        emoji: "🍘",
-        visual: "linear-gradient(135deg, #fffbea, #e5d19a)",
-        shipping: "무료배송 · 평일 기준 2~4일",
-        commissionRate: 0.08,
-        features: ["무농약 현미", "속 편한 간식", "아침 대용 추천"]
-      },
-      {
-        id: "p008",
-        name: "혈당 관리 잡곡 세트",
-        category: "건강식품",
-        description: "백미에 섞어 먹기 좋은 잡곡 구성",
-        price: 34900,
-        curatorName: "최순자",
-        curatorId: "curator_004",
-        curatorLine: "식단 관리하시는 분께 추천해요.",
-        curatorDesc: "평소 식단을 관리하는 분들을 위해 준비한 잡곡 세트입니다. 백미에 섞어 먹기 좋아 활용도가 높습니다.",
-        stock: 22,
-        emoji: "🌾",
-        visual: "linear-gradient(135deg, #f8fff1, #b8df8e)",
-        shipping: "무료배송 · 안전 포장 발송",
-        commissionRate: 0.09,
-        features: ["잡곡 혼합 구성", "식단 관리 추천", "실용적인 건강식품"]
-      },
-      {
-        id: "p009",
-        name: "부모님 건강 차 선물세트",
-        category: "선물세트",
-        description: "따뜻하게 마시기 좋은 건강 차 구성",
-        price: 27900,
-        curatorName: "김영희",
-        curatorId: "curator_001",
-        curatorLine: "가볍게 선물하기 좋아요.",
-        curatorDesc: "부담 없는 가격대의 따뜻한 차 선물세트입니다. 환절기 선물이나 감사 선물로 추천합니다.",
-        stock: 35,
-        emoji: "🍵",
-        visual: "linear-gradient(135deg, #effaf3, #9bd9b0)",
-        shipping: "무료배송 · 선물 포장 가능",
-        commissionRate: 0.09,
-        features: ["건강 차 구성", "가벼운 선물 추천", "따뜻한 음용 상품"]
-      },
-      {
-        id: "p010",
-        name: "프리미엄 김 선물세트",
-        category: "선물세트",
-        description: "바삭하고 고소한 식탁 필수품",
-        price: 22900,
-        curatorName: "박미자",
-        curatorId: "curator_002",
-        curatorLine: "누구나 좋아하는 실속 선물이에요.",
-        curatorDesc: "호불호가 적고 실용적인 선물세트입니다. 식탁에 자주 올라가는 상품이라 만족도가 높습니다.",
-        stock: 29,
-        emoji: "🥢",
-        visual: "linear-gradient(135deg, #eef2f3, #8e9eab)",
-        shipping: "무료배송 · 안전 포장 발송",
-        commissionRate: 0.08,
-        features: ["실속 선물세트", "식탁 필수품", "부담 없는 가격"]
-      }
-    ];
+    const STORAGE_KEY = "senior_groupbuy_real_seed_orders_v1";
 
     const categories = ["전체", "과일", "건강식품", "건강간식", "간편식", "생활용품", "선물세트"];
 
+    const products = [
+      {
+        id:"fruit_001",
+        category:"과일",
+        name:"[두레] 제주 타이백 감귤 5kg",
+        brand:"두레",
+        description:"새콤달콤한 제주 감귤 대용량 산지 직송 구성",
+        price:25260,
+        originalPrice:26900,
+        emoji:"🍊",
+        visual:"linear-gradient(135deg,#fff4d8,#ffb84d)",
+        rating:"4.7",
+        stock:24,
+        shipping:"무료배송 또는 판매처 정책에 따름",
+        deadline:"오늘 밤 11:59",
+        sourceName:"SSG 이마트몰 참고",
+        sourceUrl:"https://emart.ssg.com/disp/category.ssg?dispCtgId=6000092936",
+        curatorName:"김영희",
+        curatorId:"curator_001",
+        curatorLine:"부모님 간식으로 두기 좋은 과일이에요.",
+        curatorDesc:"귤은 별도 조리 없이 바로 먹기 좋아 시니어 고객 반응이 좋습니다. 가족 간식이나 사무실 간식으로도 부담 없는 구성입니다.",
+        commissionRate:0.08,
+        features:["제주 감귤 5kg 구성","간식/선물 모두 적합","공동구매 체감가 강조 가능"],
+        detailTexts:["상큼한 맛과 적당한 단맛을 기대할 수 있는 감귤 상품군입니다.","대용량 5kg 구성이라 가족 단위 구매에 적합합니다.","신선식품 특성상 수확 시기와 판매처에 따라 크기와 당도는 달라질 수 있습니다."]
+      },
+      {
+        id:"fruit_002",
+        category:"과일",
+        name:"제주 달콤 노지감귤 5kg",
+        brand:"제주푸드마씸",
+        description:"겨울철 대표 과일, 실속형 노지감귤 박스",
+        price:19900,
+        originalPrice:23900,
+        emoji:"🍊",
+        visual:"linear-gradient(135deg,#fff2c7,#ff9f43)",
+        rating:"4.6",
+        stock:31,
+        shipping:"산지 직송 순차 배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"SSG 검색 참고",
+        sourceUrl:"https://emart.ssg.com/search.ssg?query=%EA%B0%90%EA%B7%A4",
+        curatorName:"박미자",
+        curatorId:"curator_002",
+        curatorLine:"겨울에 가장 무난하게 추천할 수 있어요.",
+        curatorDesc:"노지감귤은 가격 접근성이 좋아 공동구매 테스트 상품으로 적합합니다. 재구매 유도에도 유리한 상품군입니다.",
+        commissionRate:0.08,
+        features:["가성비 과일 상품","가정용 박스 구성","시즌 공동구매 적합"],
+        detailTexts:["제주 감귤 상품군은 계절 수요가 강해 메인 진열용으로 좋습니다.","부모님댁, 사무실, 모임 간식으로 활용도가 높습니다.","공동구매 마감일을 짧게 잡으면 구매 전환을 높이기 좋습니다."]
+      },
+      {
+        id:"fruit_003",
+        category:"과일",
+        name:"현가원 서귀포 못난이 천혜향 5kg",
+        brand:"현가원",
+        description:"외관보다 맛을 중시한 실속형 천혜향",
+        price:30520,
+        originalPrice:34900,
+        emoji:"🍊",
+        visual:"linear-gradient(135deg,#fff1d0,#ffc36b)",
+        rating:"4.5",
+        stock:18,
+        shipping:"산지 직송 순차 배송",
+        deadline:"금요일 오후 5:00",
+        sourceName:"SSG 검색 참고",
+        sourceUrl:"https://emart.ssg.com/search.ssg?query=%EA%B0%90%EA%B7%A4",
+        curatorName:"이정숙",
+        curatorId:"curator_003",
+        curatorLine:"겉모양보다 실속을 보는 분께 좋아요.",
+        curatorDesc:"못난이 과일은 공동구매에서 가격 설득이 쉽습니다. 실속 구매를 선호하는 고객에게 추천하기 좋습니다.",
+        commissionRate:0.08,
+        features:["실속형 과일","천혜향 5kg 구성","선물보다 가정용 추천"],
+        detailTexts:["외관이 균일하지 않을 수 있으나 실속형 구매 니즈에 적합합니다.","일반 감귤보다 선물 느낌을 더 줄 수 있는 상품군입니다.","상세페이지에서는 당도, 산지, 중량 정보를 강조하는 것이 좋습니다."]
+      },
+      {
+        id:"fruit_004",
+        category:"과일",
+        name:"산지직송 제주 제철 가정용 감귤 3kg",
+        brand:"재일영농",
+        description:"부담 없이 주문하기 좋은 3kg 가정용 감귤",
+        price:19900,
+        originalPrice:22900,
+        emoji:"🍊",
+        visual:"linear-gradient(135deg,#fff7e6,#ffa94d)",
+        rating:"4.6",
+        stock:40,
+        shipping:"산지 직송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"SSG 검색 참고",
+        sourceUrl:"https://emart.ssg.com/search.ssg?query=%EB%85%B8%EC%A7%80%EA%B0%90%EA%B7%A4",
+        curatorName:"최순자",
+        curatorId:"curator_004",
+        curatorLine:"1~2인 가구에도 부담 없는 양이에요.",
+        curatorDesc:"3kg 구성은 첫 구매 진입장벽이 낮습니다. 공동구매 초반 테스트 상품으로 적절합니다.",
+        commissionRate:0.08,
+        features:["3kg 소용량 구성","첫 구매 적합","간식용 추천"],
+        detailTexts:["5kg이 부담스러운 고객에게 적합한 3kg 구성입니다.","가격대가 낮아 모바일 즉시 구매 전환을 기대할 수 있습니다.","보관 기간을 고려해 빠른 소비를 안내하는 것이 좋습니다."]
+      },
+      {
+        id:"fruit_005",
+        category:"과일",
+        name:"해남 햇 꿀밤 고구마 3kg",
+        brand:"농부곳간",
+        description:"에어프라이어에 구우면 달콤한 고구마",
+        price:15900,
+        originalPrice:19900,
+        emoji:"🍠",
+        visual:"linear-gradient(135deg,#fff0e8,#c9855f)",
+        rating:"4.4",
+        stock:34,
+        shipping:"무료배송 또는 판매처 정책에 따름",
+        deadline:"내일 오후 6:00",
+        sourceName:"SSG 검색 참고",
+        sourceUrl:"https://emart.ssg.com/search.ssg?query=%ED%98%B8%EB%B0%95%EA%B3%A0%EA%B5%AC%EB%A7%883kg",
+        curatorName:"박미자",
+        curatorId:"curator_002",
+        curatorLine:"아침 식사 대용으로 추천해요.",
+        curatorDesc:"고구마는 건강간식과 식사대용 사이에 위치해 시니어 고객에게 설명하기 쉽습니다. 에어프라이어 조리 문구를 강조하면 좋습니다.",
+        commissionRate:0.08,
+        features:["햇고구마 3kg","식사대용 가능","에어프라이어 조리 추천"],
+        detailTexts:["고구마는 아침 대용, 간식, 다이어트 식단으로 활용 가능합니다.","크기와 당도는 수확 시기와 판매처에 따라 달라질 수 있습니다.","보관 시 통풍이 잘 되는 곳에 두는 안내가 필요합니다."]
+      },
+
+      {
+        id:"health_001",
+        category:"건강식품",
+        name:"매일유업 매일두유 검은콩 저당 190ml 24팩",
+        brand:"매일유업",
+        description:"당 부담을 줄인 고소한 검은콩 두유",
+        price:15700,
+        originalPrice:19900,
+        emoji:"🥛",
+        visual:"linear-gradient(135deg,#f3f8ff,#b6d7ff)",
+        rating:"4.7",
+        stock:27,
+        shipping:"택배 배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=13143902",
+        curatorName:"이정숙",
+        curatorId:"curator_003",
+        curatorLine:"당 부담이 걱정되는 분께 좋아요.",
+        curatorDesc:"두유 24팩은 보관이 쉽고 반복 구매가 일어나기 좋은 상품입니다. 저당 키워드가 있어 건강식품 카테고리에서 설득력이 있습니다.",
+        commissionRate:0.1,
+        features:["저당 두유","190ml 24팩","간식/식사대용"],
+        detailTexts:["당 부담을 줄인 두유 상품군입니다.","팩 단위라 보관과 섭취가 편리합니다.","운동 후, 간식, 아침 대용으로 활용하기 좋습니다."]
+      },
+      {
+        id:"health_002",
+        category:"건강식품",
+        name:"매일유업 매일두유 고단백 190ml 24팩",
+        brand:"매일유업",
+        description:"단백질 보충을 위한 고단백 두유",
+        price:18360,
+        originalPrice:22900,
+        emoji:"🥛",
+        visual:"linear-gradient(135deg,#eef6ff,#8fc5ff)",
+        rating:"4.7",
+        stock:21,
+        shipping:"택배 배송",
+        deadline:"금요일 오후 5:00",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=14268572",
+        curatorName:"김영희",
+        curatorId:"curator_001",
+        curatorLine:"운동 후나 아침 대용으로 좋아요.",
+        curatorDesc:"고단백 두유는 건강 관리에 관심 있는 고객에게 추천하기 쉽습니다. 시니어뿐 아니라 가족 단위 구매에도 적합합니다.",
+        commissionRate:0.1,
+        features:["고단백 구성","24팩 대용량","아침 대용 추천"],
+        detailTexts:["단백질 섭취를 고려하는 고객에게 적합한 상품군입니다.","상온 보관 가능한 팩 상품은 공동구매 운영 부담이 낮습니다.","정기 구매로 확장하기 좋은 카테고리입니다."]
+      },
+      {
+        id:"health_003",
+        category:"건강식품",
+        name:"정식품 베지밀 고단백두유 시니어 190ml 24팩",
+        brand:"정식품",
+        description:"시니어 고객에게 설명하기 쉬운 고단백 두유",
+        price:20020,
+        originalPrice:24900,
+        emoji:"🥛",
+        visual:"linear-gradient(135deg,#f8fafc,#cbd5e1)",
+        rating:"4.6",
+        stock:15,
+        shipping:"택배 배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=32457383",
+        curatorName:"최순자",
+        curatorId:"curator_004",
+        curatorLine:"부모님께 보내기 좋은 두유 구성이에요.",
+        curatorDesc:"시니어 키워드가 명확해 서비스 컨셉과 잘 맞습니다. 선물성 주문과 반복 주문 모두 기대할 수 있습니다.",
+        commissionRate:0.1,
+        features:["시니어 타깃","고단백 두유","24팩 구성"],
+        detailTexts:["시니어 고객에게 추천하기 쉬운 두유 상품군입니다.","부모님댁 정기 배송 상품으로 확장할 수 있습니다.","상세페이지에서는 단백질, 칼슘, 당류 등 영양 포인트를 강조하면 좋습니다."]
+      },
+      {
+        id:"health_004",
+        category:"건강식품",
+        name:"혈당 관리 잡곡 혼합 세트",
+        brand:"건강곡물",
+        description:"백미에 섞어 먹기 좋은 잡곡 구성",
+        price:34900,
+        originalPrice:39900,
+        emoji:"🌾",
+        visual:"linear-gradient(135deg,#f8fff1,#b8df8e)",
+        rating:"4.5",
+        stock:22,
+        shipping:"무료배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"김영희",
+        curatorId:"curator_001",
+        curatorLine:"식단 관리하시는 분께 추천해요.",
+        curatorDesc:"잡곡 세트는 시니어 공동구매에서 설명하기 쉬운 상품입니다. 백미에 섞는 방식이라 사용법이 직관적입니다.",
+        commissionRate:0.09,
+        features:["잡곡 혼합 구성","식단관리 추천","가정용 실속 상품"],
+        detailTexts:["백미에 섞어 먹기 좋은 잡곡 세트입니다.","건강식품 카테고리의 기본 상품으로 활용하기 좋습니다.","실제 운영 시 원산지와 구성 곡물 표기가 필요합니다."]
+      },
+      {
+        id:"health_005",
+        category:"건강식품",
+        name:"부모님 건강 차 선물세트",
+        brand:"온가족차",
+        description:"따뜻하게 마시기 좋은 건강 차 구성",
+        price:27900,
+        originalPrice:32900,
+        emoji:"🍵",
+        visual:"linear-gradient(135deg,#effaf3,#9bd9b0)",
+        rating:"4.6",
+        stock:35,
+        shipping:"무료배송",
+        deadline:"금요일 오후 5:00",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"박미자",
+        curatorId:"curator_002",
+        curatorLine:"가볍게 선물하기 좋아요.",
+        curatorDesc:"건강 차 세트는 가격대가 낮아 부담 없는 선물용으로 적합합니다. 명절, 생신, 감사 선물 카피와 잘 맞습니다.",
+        commissionRate:0.09,
+        features:["건강 차 구성","가벼운 선물","따뜻한 음용 상품"],
+        detailTexts:["따뜻한 차를 선호하는 고객에게 추천하기 좋은 구성입니다.","선물세트와 건강식품 카테고리 양쪽에 활용 가능합니다.","상세페이지에서는 구성품, 원재료, 음용 방법을 명확히 표기하면 좋습니다."]
+      },
+
+      {
+        id:"snack_001",
+        category:"건강간식",
+        name:"해남 해풍고구마 밤고구마 3kg",
+        brand:"해남농가",
+        description:"구워 먹기 좋은 달콤한 밤고구마",
+        price:14900,
+        originalPrice:18900,
+        emoji:"🍠",
+        visual:"linear-gradient(135deg,#fff0e8,#bc7a57)",
+        rating:"4.5",
+        stock:33,
+        shipping:"산지 직송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"SSG 검색 참고",
+        sourceUrl:"https://emart.ssg.com/search.ssg?query=%EC%9C%A0%EA%B8%B0%EB%86%8D%EA%B3%A0%EA%B5%AC%EB%A7%88",
+        curatorName:"이정숙",
+        curatorId:"curator_003",
+        curatorLine:"속 편한 간식으로 추천해요.",
+        curatorDesc:"고구마는 건강간식 대표 상품입니다. 조리법이 쉬워 구매 전환이 높은 편입니다.",
+        commissionRate:0.08,
+        features:["밤고구마 3kg","건강간식 추천","구이용 적합"],
+        detailTexts:["에어프라이어나 오븐에 구워 간편하게 먹기 좋습니다.","시니어 고객에게 설명하기 쉬운 건강간식 상품군입니다.","신선식품 특성상 크기와 수분감은 달라질 수 있습니다."]
+      },
+      {
+        id:"snack_002",
+        category:"건강간식",
+        name:"무농약 현미 누룽지 세트",
+        brand:"현미마을",
+        description:"구수하고 속 편한 아침 간식",
+        price:24900,
+        originalPrice:29900,
+        emoji:"🍘",
+        visual:"linear-gradient(135deg,#fffbea,#e5d19a)",
+        rating:"4.6",
+        stock:28,
+        shipping:"무료배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"최순자",
+        curatorId:"curator_004",
+        curatorLine:"아침에 따뜻하게 드시기 좋아요.",
+        curatorDesc:"누룽지는 설명이 쉽고 연령대가 높은 고객에게 익숙한 상품입니다. 재구매형 건강간식으로 적합합니다.",
+        commissionRate:0.08,
+        features:["현미 누룽지","아침 대용","속 편한 간식"],
+        detailTexts:["뜨거운 물에 불려 간편하게 먹을 수 있습니다.","아침 식사가 부담스러운 분께 추천하기 좋습니다.","실제 운영 시 원재료와 중량 표기가 필요합니다."]
+      },
+      {
+        id:"snack_003",
+        category:"건강간식",
+        name:"오트밀 견과 에너지바 20개입",
+        brand:"든든바",
+        description:"외출 시 챙기기 좋은 간편 건강간식",
+        price:21900,
+        originalPrice:26900,
+        emoji:"🥜",
+        visual:"linear-gradient(135deg,#fff7ed,#d6a46a)",
+        rating:"4.4",
+        stock:30,
+        shipping:"택배 배송",
+        deadline:"금요일 오후 5:00",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"김영희",
+        curatorId:"curator_001",
+        curatorLine:"가방에 넣고 다니기 좋은 간식이에요.",
+        curatorDesc:"개별 포장 간식은 공동구매에서 선물/비축용으로 설명하기 쉽습니다. 등산, 산책, 병원 방문 시 간식으로 카피를 잡을 수 있습니다.",
+        commissionRate:0.09,
+        features:["개별 포장","견과 함유","외출용 간식"],
+        detailTexts:["간편하게 휴대하기 좋은 에너지바 구성입니다.","간식, 비상식량, 운동 후 간식으로 활용 가능합니다.","알레르기 성분 표기가 필요한 상품군입니다."]
+      },
+      {
+        id:"snack_004",
+        category:"건강간식",
+        name:"저당 곤약젤리 혼합 30개입",
+        brand:"라이트젤리",
+        description:"부담 없이 먹기 좋은 저당 간식",
+        price:18900,
+        originalPrice:23900,
+        emoji:"🍇",
+        visual:"linear-gradient(135deg,#f5f3ff,#c4b5fd)",
+        rating:"4.5",
+        stock:26,
+        shipping:"택배 배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"박미자",
+        curatorId:"curator_002",
+        curatorLine:"단 간식이 부담스러운 분께 좋아요.",
+        curatorDesc:"저당 간식은 건강 관심 고객에게 반응이 좋습니다. 단맛 욕구를 줄이는 간식으로 포지셔닝할 수 있습니다.",
+        commissionRate:0.09,
+        features:["저당 콘셉트","30개입 대용량","간편 섭취"],
+        detailTexts:["저당 콘셉트의 곤약젤리 상품군입니다.","개별 포장이라 보관과 휴대가 편리합니다.","섭취 전 성분표와 알레르기 정보를 확인하도록 안내해야 합니다."]
+      },
+      {
+        id:"snack_005",
+        category:"건강간식",
+        name:"국산 볶음 아몬드 1kg",
+        brand:"견과곳간",
+        description:"고소하게 즐기는 대용량 견과 간식",
+        price:25900,
+        originalPrice:30900,
+        emoji:"🌰",
+        visual:"linear-gradient(135deg,#fff7ed,#b7794c)",
+        rating:"4.7",
+        stock:19,
+        shipping:"택배 배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"이정숙",
+        curatorId:"curator_003",
+        curatorLine:"커피나 차와 같이 먹기 좋아요.",
+        curatorDesc:"견과류는 건강간식 카테고리에서 기본적인 수요가 있습니다. 대용량 구성은 가격 메리트를 강조하기 좋습니다.",
+        commissionRate:0.09,
+        features:["대용량 1kg","견과 간식","차/커피 곁들임 추천"],
+        detailTexts:["간단하게 집어 먹기 좋은 견과류 간식입니다.","대용량이라 가족 단위 구매에 적합합니다.","견과 알레르기 안내가 필요한 상품군입니다."]
+      },
+
+      {
+        id:"meal_001",
+        category:"간편식",
+        name:"CJ제일제당 비비고 삼계탕 800g",
+        brand:"비비고",
+        description:"데우기만 하면 되는 든든한 보양식",
+        price:9790,
+        originalPrice:12900,
+        emoji:"🍲",
+        visual:"linear-gradient(135deg,#fff7ed,#ffc48d)",
+        rating:"4.6",
+        stock:25,
+        shipping:"택배 배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"다나와/CJ더마켓 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=4779374",
+        curatorName:"박미자",
+        curatorId:"curator_002",
+        curatorLine:"혼자 사시는 부모님께 좋아요.",
+        curatorDesc:"삼계탕은 보양식 이미지가 강해 시니어 공동구매에 잘 맞습니다. 간편 조리 상품이라 구매 후 만족도 설명이 쉽습니다.",
+        commissionRate:0.1,
+        features:["간편 보양식","800g 1팩","실온/냉장 정책 확인 필요"],
+        detailTexts:["가정에서 간편하게 데워 먹을 수 있는 삼계탕 상품군입니다.","부모님댁 비상식으로 보내기 좋은 상품입니다.","실제 운영 시 보관 방식과 유통기한 정보를 명확히 표시해야 합니다."]
+      },
+      {
+        id:"meal_002",
+        category:"간편식",
+        name:"오뚜기 옛날 삼계탕 900g",
+        brand:"오뚜기",
+        description:"1인분으로 든든한 실온 보관 삼계탕",
+        price:9900,
+        originalPrice:12900,
+        emoji:"🍲",
+        visual:"linear-gradient(135deg,#fff1e6,#ffb86b)",
+        rating:"4.5",
+        stock:22,
+        shipping:"택배 배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=6309076",
+        curatorName:"김영희",
+        curatorId:"curator_001",
+        curatorLine:"식사 챙기기 힘든 날에 좋아요.",
+        curatorDesc:"오뚜기 삼계탕은 브랜드 인지도가 있어 신뢰감을 주기 좋습니다. 공동구매 카드에서 브랜드를 크게 보여주면 전환에 유리합니다.",
+        commissionRate:0.1,
+        features:["900g 구성","1인분 보양식","브랜드 인지도"],
+        detailTexts:["간편하게 데워 먹는 보양식 상품군입니다.","시니어 고객에게 익숙한 브랜드 상품은 신뢰감을 줄 수 있습니다.","실제 가격은 판매처와 배송비에 따라 달라질 수 있습니다."]
+      },
+      {
+        id:"meal_003",
+        category:"간편식",
+        name:"풀무원 얇은피 꽉찬속 김치만두 1.2kg",
+        brand:"풀무원",
+        description:"간식과 식사 모두 가능한 냉동 김치만두",
+        price:12380,
+        originalPrice:15900,
+        emoji:"🥟",
+        visual:"linear-gradient(135deg,#fff1f2,#fda4af)",
+        rating:"5.0",
+        stock:32,
+        shipping:"냉동 배송",
+        deadline:"금요일 오후 5:00",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=8663108",
+        curatorName:"최순자",
+        curatorId:"curator_004",
+        curatorLine:"간단히 한 끼 해결하기 좋아요.",
+        curatorDesc:"냉동만두는 반복 구매가 가능한 간편식입니다. 가족 단위 고객에게도 무난하게 추천할 수 있습니다.",
+        commissionRate:0.1,
+        features:["냉동 만두","1.2kg 구성","간식/식사 겸용"],
+        detailTexts:["찜, 군만두, 만둣국 등으로 활용 가능한 냉동 간편식입니다.","냉동 배송 상품은 수령 후 즉시 보관 안내가 필요합니다.","가족 단위 공동구매에 적합한 상품군입니다."]
+      },
+      {
+        id:"meal_004",
+        category:"간편식",
+        name:"풀무원 얇은피 꽉찬속 고기만두 1.32kg",
+        brand:"풀무원",
+        description:"얇은피와 고기소가 특징인 냉동 고기만두",
+        price:14160,
+        originalPrice:17900,
+        emoji:"🥟",
+        visual:"linear-gradient(135deg,#fff7ed,#fdba74)",
+        rating:"4.8",
+        stock:29,
+        shipping:"냉동 배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=10889580",
+        curatorName:"이정숙",
+        curatorId:"curator_003",
+        curatorLine:"냉동실에 두면 든든해요.",
+        curatorDesc:"냉동실 비축용 간편식으로 설명하기 좋습니다. 만두 상품은 카테고리 확장성이 높습니다.",
+        commissionRate:0.1,
+        features:["고기만두","1.32kg 구성","냉동실 비축용"],
+        detailTexts:["간편하게 조리할 수 있는 냉동 고기만두 상품군입니다.","식사 대용과 간식용 모두 활용 가능합니다.","배송 시 냉동 상태 유지 안내가 필요합니다."]
+      },
+      {
+        id:"meal_005",
+        category:"간편식",
+        name:"햇반 전복내장죽 420g",
+        brand:"CJ제일제당",
+        description:"부드럽게 먹기 좋은 간편 죽 상품",
+        price:3900,
+        originalPrice:4900,
+        emoji:"🥣",
+        visual:"linear-gradient(135deg,#f8fafc,#d9e2ec)",
+        rating:"4.6",
+        stock:45,
+        shipping:"상온 배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"CJ더마켓 참고",
+        sourceUrl:"https://www.cjthemarket.com/the/product/product-main?prdCd=40156318",
+        curatorName:"박미자",
+        curatorId:"curator_002",
+        curatorLine:"속이 편한 한 끼로 좋아요.",
+        curatorDesc:"죽 상품은 시니어 고객에게 설명이 쉽고 객단가를 낮춰 첫 구매를 유도하기 좋습니다. 묶음 판매로 확장할 수 있습니다.",
+        commissionRate:0.1,
+        features:["간편 죽","420g 구성","부드러운 식사"],
+        detailTexts:["전자레인지로 간편 조리 가능한 죽 상품군입니다.","아침 식사나 속이 불편한 날의 한 끼로 적합합니다.","묶음 구성으로 판매하면 객단가를 높일 수 있습니다."]
+      },
+
+      {
+        id:"life_001",
+        category:"생활용품",
+        name:"크리넥스 데코 앤 소프트 30m 30롤",
+        brand:"크리넥스",
+        description:"가정에서 자주 쓰는 3겹 롤화장지",
+        price:23060,
+        originalPrice:27900,
+        emoji:"🧻",
+        visual:"linear-gradient(135deg,#f8fafc,#cbd5e1)",
+        rating:"4.7",
+        stock:38,
+        shipping:"택배 배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=13240853",
+        curatorName:"김영희",
+        curatorId:"curator_001",
+        curatorLine:"생활필수품이라 실패가 적어요.",
+        curatorDesc:"화장지는 공동구매에서 가격 비교가 쉬운 생활필수품입니다. 대량 구매 수요가 있어 묶음 할인 구성이 좋습니다.",
+        commissionRate:0.07,
+        features:["생활필수품","30롤 구성","대량구매 적합"],
+        detailTexts:["가정에서 자주 사용하는 롤화장지 상품군입니다.","가격 비교가 쉬워 공동구매 특가를 강조하기 좋습니다.","부피가 큰 상품이므로 배송비 정책 확인이 필요합니다."]
+      },
+      {
+        id:"life_002",
+        category:"생활용품",
+        name:"크리넥스 울트라 클린 27m 30롤 2팩",
+        brand:"크리넥스",
+        description:"넉넉하게 쟁여두기 좋은 화장지 2팩 구성",
+        price:34080,
+        originalPrice:39900,
+        emoji:"🧻",
+        visual:"linear-gradient(135deg,#eff6ff,#bfdbfe)",
+        rating:"4.7",
+        stock:24,
+        shipping:"택배 배송",
+        deadline:"금요일 오후 5:00",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=12872402",
+        curatorName:"최순자",
+        curatorId:"curator_004",
+        curatorLine:"쟁여두기 좋은 실속 구성입니다.",
+        curatorDesc:"2팩 구성은 공동구매 혜택을 크게 느끼게 만들 수 있습니다. 생활용품 카테고리의 대표 상품으로 적합합니다.",
+        commissionRate:0.07,
+        features:["30롤 2팩","가정용 비축","실속 구성"],
+        detailTexts:["대량 비축용으로 적합한 화장지 상품군입니다.","가족 단위 고객에게 추천하기 좋습니다.","보관 공간이 필요한 상품임을 안내하면 좋습니다."]
+      },
+      {
+        id:"life_003",
+        category:"생활용품",
+        name:"유한킴벌리 크린가드 소프트 크린 KF-AD 50매",
+        brand:"유한킴벌리",
+        description:"일상 외출용으로 쓰기 좋은 마스크 50매",
+        price:6340,
+        originalPrice:9900,
+        emoji:"😷",
+        visual:"linear-gradient(135deg,#f1f5f9,#94a3b8)",
+        rating:"4.6",
+        stock:50,
+        shipping:"택배 배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=12033926",
+        curatorName:"이정숙",
+        curatorId:"curator_003",
+        curatorLine:"집에 두고 쓰기 좋은 기본 생활용품이에요.",
+        curatorDesc:"마스크는 단가가 낮아 추가 구매 상품으로 적합합니다. 다른 생활용품과 묶음 구성으로 운영하기 좋습니다.",
+        commissionRate:0.07,
+        features:["50매 구성","일상 외출용","낮은 진입가격"],
+        detailTexts:["일상 외출용으로 사용할 수 있는 마스크 상품군입니다.","낮은 가격대라 장바구니 추가 상품으로 적합합니다.","규격과 인증 정보는 실제 상품 페이지 기준으로 확인해야 합니다."]
+      },
+      {
+        id:"life_004",
+        category:"생활용품",
+        name:"테팔 스타트이지 IH 프라이팬 28cm",
+        brand:"테팔",
+        description:"인덕션 사용 가능한 28cm 프라이팬",
+        price:29940,
+        originalPrice:40820,
+        emoji:"🍳",
+        visual:"linear-gradient(135deg,#f8fafc,#9ca3af)",
+        rating:"4.7",
+        stock:17,
+        shipping:"택배 배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=13274987",
+        curatorName:"박미자",
+        curatorId:"curator_002",
+        curatorLine:"주방용품 교체 시기에 추천해요.",
+        curatorDesc:"프라이팬은 브랜드 인지도가 높고 선물성도 있습니다. 주방용품 공동구매 카테고리 확장에 적합합니다.",
+        commissionRate:0.08,
+        features:["28cm 프라이팬","IH 인덕션 가능","브랜드 주방용품"],
+        detailTexts:["가정에서 사용 빈도가 높은 프라이팬 상품군입니다.","브랜드 신뢰도가 있어 공동구매 전환에 유리합니다.","사이즈와 인덕션 사용 가능 여부를 명확히 표기해야 합니다."]
+      },
+      {
+        id:"life_005",
+        category:"생활용품",
+        name:"락앤락 유로 오븐글라스 밀폐용기 16종 세트",
+        brand:"락앤락",
+        description:"반찬 보관에 좋은 유리 밀폐용기 세트",
+        price:39900,
+        originalPrice:49900,
+        emoji:"🥡",
+        visual:"linear-gradient(135deg,#ecfeff,#67e8f9)",
+        rating:"4.5",
+        stock:20,
+        shipping:"택배 배송",
+        deadline:"금요일 오후 5:00",
+        sourceName:"다나와 참고",
+        sourceUrl:"https://prod.danawa.com/info/?pcode=71191286",
+        curatorName:"김영희",
+        curatorId:"curator_001",
+        curatorLine:"반찬 정리용으로 실용적이에요.",
+        curatorDesc:"밀폐용기 세트는 주부 고객과 시니어 가정 모두에게 실용적입니다. 세트 구성이어서 선물성도 있습니다.",
+        commissionRate:0.08,
+        features:["16종 세트","유리 밀폐용기","반찬 보관용"],
+        detailTexts:["반찬, 식재료 보관에 활용하기 좋은 밀폐용기 상품군입니다.","세트 구성이라 공동구매 특가 느낌을 주기 좋습니다.","실제 운영 시 구성품 사이즈와 재질을 정확히 표기해야 합니다."]
+      },
+
+      {
+        id:"gift_001",
+        category:"선물세트",
+        name:"국산 들기름 선물세트",
+        brand:"고소한집",
+        description:"고소한 향이 진한 집밥용 선물세트",
+        price:38000,
+        originalPrice:45000,
+        emoji:"🫙",
+        visual:"linear-gradient(135deg,#fff8dd,#e9c46a)",
+        rating:"4.6",
+        stock:20,
+        shipping:"무료배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"최순자",
+        curatorId:"curator_004",
+        curatorLine:"집밥 자주 드시는 분께 추천해요.",
+        curatorDesc:"들기름 선물세트는 실용성과 선물성을 함께 갖춘 상품입니다. 부모님댁, 명절, 감사 선물용으로 설명하기 좋습니다.",
+        commissionRate:0.1,
+        features:["국산 들기름","선물 포장 가능","집밥용 추천"],
+        detailTexts:["집밥을 자주 드시는 가정에 실용적인 선물세트입니다.","명절이나 감사 선물용으로 활용하기 좋습니다.","실제 운영 시 원산지와 용량 표시가 필요합니다."]
+      },
+      {
+        id:"gift_002",
+        category:"선물세트",
+        name:"프리미엄 김 선물세트",
+        brand:"바다곳간",
+        description:"바삭하고 고소한 식탁 필수품",
+        price:22900,
+        originalPrice:27900,
+        emoji:"🥢",
+        visual:"linear-gradient(135deg,#eef2f3,#8e9eab)",
+        rating:"4.7",
+        stock:29,
+        shipping:"무료배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"박미자",
+        curatorId:"curator_002",
+        curatorLine:"누구나 좋아하는 실속 선물이에요.",
+        curatorDesc:"김 선물세트는 호불호가 적고 가격 부담이 낮습니다. 대량 선물 수요에도 적합합니다.",
+        commissionRate:0.08,
+        features:["실속 선물세트","식탁 필수품","부담 없는 가격"],
+        detailTexts:["누구나 사용하기 쉬운 식품 선물세트입니다.","가격대가 낮아 여러 개 주문하기 좋습니다.","실제 운영 시 구성 수량과 원산지 표기가 필요합니다."]
+      },
+      {
+        id:"gift_003",
+        category:"선물세트",
+        name:"시니어 관절 건강 간식 세트",
+        brand:"효도간식",
+        description:"부모님 선물용 건강 간식 구성",
+        price:45000,
+        originalPrice:54000,
+        emoji:"🎁",
+        visual:"linear-gradient(135deg,#fff3f5,#ffd1dc)",
+        rating:"4.5",
+        stock:12,
+        shipping:"무료배송",
+        deadline:"금요일 오후 5:00",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"김영희",
+        curatorId:"curator_001",
+        curatorLine:"명절 선물로 반응이 좋아요.",
+        curatorDesc:"시니어 타깃 서비스의 정체성을 가장 잘 보여줄 수 있는 선물세트입니다. 부모님 선물 카피와 궁합이 좋습니다.",
+        commissionRate:0.12,
+        features:["부모님 선물","건강 간식 구성","명절용 추천"],
+        detailTexts:["부모님께 보내기 좋은 건강 간식 세트입니다.","선물용 상세페이지에서는 포장 이미지와 구성품 정보가 중요합니다.","건강 관련 표현은 과장되지 않게 작성해야 합니다."]
+      },
+      {
+        id:"gift_004",
+        category:"선물세트",
+        name:"부모님 건강 차 선물세트 프리미엄",
+        brand:"온가족차",
+        description:"따뜻한 차를 다양하게 담은 선물 구성",
+        price:32900,
+        originalPrice:39900,
+        emoji:"🍵",
+        visual:"linear-gradient(135deg,#ecfdf5,#86efac)",
+        rating:"4.6",
+        stock:25,
+        shipping:"무료배송",
+        deadline:"오늘 밤 11:59",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"이정숙",
+        curatorId:"curator_003",
+        curatorLine:"가볍지만 정성 있는 선물이에요.",
+        curatorDesc:"건강 차 선물세트는 계절성 이벤트와 잘 맞습니다. 환절기, 명절, 생신 선물 카피로 활용 가능합니다.",
+        commissionRate:0.09,
+        features:["차 선물세트","부담 없는 가격","환절기 추천"],
+        detailTexts:["따뜻하게 마시는 건강 차 구성입니다.","가벼운 선물용으로 적합한 가격대입니다.","실제 운영 시 구성 차 종류와 원재료 표기가 필요합니다."]
+      },
+      {
+        id:"gift_005",
+        category:"선물세트",
+        name:"한우 사골곰탕 선물세트 8팩",
+        brand:"든든한상",
+        description:"간편하게 데워 먹는 보양식 선물세트",
+        price:42900,
+        originalPrice:52900,
+        emoji:"🥣",
+        visual:"linear-gradient(135deg,#fff7ed,#fed7aa)",
+        rating:"4.6",
+        stock:16,
+        shipping:"무료배송",
+        deadline:"내일 오후 6:00",
+        sourceName:"운영자 등록 상품",
+        sourceUrl:"#",
+        curatorName:"최순자",
+        curatorId:"curator_004",
+        curatorLine:"든든한 식사 선물로 좋아요.",
+        curatorDesc:"곰탕 선물세트는 간편식과 선물세트 성격을 동시에 갖고 있습니다. 부모님댁에 보내기 좋은 상품으로 포지셔닝할 수 있습니다.",
+        commissionRate:0.1,
+        features:["곰탕 8팩","보양식 선물","간편 조리"],
+        detailTexts:["데워 먹기 좋은 간편 보양식 선물세트입니다.","혼자 사시는 부모님께 보내기 좋은 구성입니다.","실제 운영 시 보관 방식과 유통기한 안내가 필요합니다."]
+      }
+    ];
+
     let state = {
-      page: "list",
-      category: "전체",
-      selectedProductId: products[0].id,
-      qty: 1,
-      pendingOrder: null,
-      lastOrder: null
+      page:"list",
+      category:"전체",
+      selectedProductId:products[0].id,
+      qty:1,
+      pendingOrder:null,
+      lastOrder:null
     };
 
     function money(value) {
       return Number(value).toLocaleString("ko-KR") + "원";
+    }
+
+    function discountRate(product) {
+      if (!product.originalPrice || product.originalPrice <= product.price) return 0;
+      return Math.round((1 - product.price / product.originalPrice) * 100);
     }
 
     function getSelectedProduct() {
@@ -1402,22 +2216,23 @@
 
     function setPage(page) {
       state.page = page;
+
       document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
       document.getElementById(page + "Page").classList.add("active");
 
-      const showListControls = page === "list";
-      document.getElementById("listControls").style.display = showListControls ? "block" : "none";
+      document.getElementById("listControls").style.display = page === "list" ? "block" : "none";
+      document.getElementById("fixedBuy").classList.toggle("show", page === "detail");
 
-      const showFixedBuy = page === "detail";
-      document.getElementById("fixedBuy").classList.toggle("show", showFixedBuy);
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top:0, behavior:"smooth" });
     }
 
     function renderTabs() {
       const wrap = document.getElementById("categoryTabs");
+
       wrap.innerHTML = categories.map(cat => `
-        <button class="tab ${state.category === cat ? "active" : ""}" onclick="setCategory('${cat}')">${cat}</button>
+        <button class="tab ${state.category === cat ? "active" : ""}" onclick="setCategory('${cat}')">
+          ${cat}
+        </button>
       `).join("");
     }
 
@@ -1429,42 +2244,65 @@
 
     function renderProducts() {
       const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+
       const filtered = products.filter(p => {
         const matchCategory = state.category === "전체" || p.category === state.category;
-        const text = [p.name, p.description, p.category, p.curatorName, p.curatorLine].join(" ").toLowerCase();
-        const matchKeyword = !keyword || text.includes(keyword);
-        return matchCategory && matchKeyword;
+        const text = [
+          p.name,
+          p.brand,
+          p.category,
+          p.description,
+          p.curatorName,
+          p.curatorLine
+        ].join(" ").toLowerCase();
+
+        return matchCategory && (!keyword || text.includes(keyword));
       });
 
       document.getElementById("productCount").textContent = `${filtered.length}개 상품`;
 
       const grid = document.getElementById("productGrid");
+
       if (!filtered.length) {
         grid.innerHTML = `<div class="empty">검색 조건에 맞는 상품이 없습니다.</div>`;
         return;
       }
 
-      grid.innerHTML = filtered.map(p => `
-        <article class="product-card">
-          <div class="product-thumb">
-            <div class="product-visual" style="--visual:${p.visual}">${p.emoji}</div>
-            <div class="badge-row">
-              <span class="badge hot">공동구매 특가</span>
-              <span class="badge">${p.curatorName} 큐레이터 추천</span>
+      grid.innerHTML = filtered.map(p => {
+        const dc = discountRate(p);
+
+        return `
+          <article class="product-card">
+            <div class="thumb" style="--visual:${p.visual}">
+              <div class="badges">
+                <span class="badge hot">공동구매 특가</span>
+                <span class="badge blue">${p.curatorName} 추천</span>
+              </div>
+              <div class="emoji">${p.emoji}</div>
             </div>
-          </div>
-          <div class="product-body">
-            <h3 class="product-title">${p.name}</h3>
-            <p class="product-desc">${p.description}</p>
-            <div class="price-row">
-              <div class="price">${money(p.price)}</div>
-              <div class="stock">남은 수량 ${p.stock}개</div>
+
+            <div class="card-body">
+              <div class="category-line">
+                <span class="category">${p.category} · ${p.brand}</span>
+                <span class="rating">★ ${p.rating}</span>
+              </div>
+
+              <h3 class="product-title">${p.name}</h3>
+              <p class="desc">${p.description}</p>
+
+              ${dc ? `<div class="original">${money(p.originalPrice)}</div>` : ""}
+              <div class="price-row">
+                <div class="price">${dc ? `<span style="color:#f04452;font-size:18px;margin-right:4px;">${dc}%</span>` : ""}${money(p.price)}</div>
+                <div class="stock">남은 수량 ${p.stock}개</div>
+              </div>
+
+              <div class="curator">“${p.curatorLine}”</div>
+
+              <button class="btn btn-primary" onclick="openProduct('${p.id}')">상세보기</button>
             </div>
-            <div class="curator-note">“${p.curatorLine}”</div>
-            <button class="primary-btn" onclick="openProduct('${p.id}')">상세보기</button>
-          </div>
-        </article>
-      `).join("");
+          </article>
+        `;
+      }).join("");
     }
 
     function openProduct(productId) {
@@ -1476,26 +2314,45 @@
 
     function renderDetail() {
       const p = getSelectedProduct();
+      const dc = discountRate(p);
       const total = p.price * state.qty;
 
       document.getElementById("detailVisual").style.setProperty("--visual", p.visual);
-      document.getElementById("detailVisual").textContent = p.emoji;
+      document.getElementById("detailEmoji").textContent = p.emoji;
+
       document.getElementById("detailChips").innerHTML = `
-        <span class="mini-chip">공동구매 특가</span>
-        <span class="mini-chip gray">${p.category}</span>
-        <span class="mini-chip gray">남은 수량 ${p.stock}개</span>
+        <span class="chip">공동구매 특가</span>
+        <span class="chip gray">${p.category}</span>
+        <span class="chip gray">${p.brand}</span>
+        ${dc ? `<span class="chip gray">${dc}% 할인 느낌</span>` : ""}
       `;
+
       document.getElementById("detailTitle").textContent = p.name;
+      document.getElementById("detailDesc").textContent = p.description;
+      document.getElementById("detailOriginal").textContent = p.originalPrice ? money(p.originalPrice) : "";
       document.getElementById("detailPrice").textContent = money(p.price);
       document.getElementById("detailShipping").textContent = p.shipping;
+      document.getElementById("detailSource").textContent = p.sourceName;
+      document.getElementById("detailDeadline").textContent = p.deadline;
+      document.getElementById("detailStock").textContent = `${p.stock}개`;
       document.getElementById("detailQty").textContent = state.qty;
       document.getElementById("detailTotal").textContent = money(total);
       document.getElementById("fixedTotal").textContent = money(total);
 
+      const sourceLink = document.getElementById("sourceLink");
+      if (p.sourceUrl && p.sourceUrl !== "#") {
+        sourceLink.href = p.sourceUrl;
+        sourceLink.style.display = "inline-flex";
+      } else {
+        sourceLink.href = "#";
+        sourceLink.style.display = "none";
+      }
+
       document.getElementById("curatorTitle").textContent = `${p.curatorName} 큐레이터가 추천합니다`;
       document.getElementById("curatorDesc").textContent = p.curatorDesc;
 
-      document.getElementById("longDetailImage").innerHTML = `
+      document.getElementById("detailBanner").style.setProperty("--visual", p.visual);
+      document.getElementById("detailBanner").innerHTML = `
         <div>
           <div class="big">${p.emoji}</div>
           <h3>${p.name}</h3>
@@ -1503,8 +2360,14 @@
         </div>
       `;
 
-      document.getElementById("featureList").innerHTML = p.features.map((f, i) => `
-        <li>${i + 1}. ${f}</li>
+      document.getElementById("featureGrid").innerHTML = p.features.map((text, index) => `
+        <div class="feature">
+          <strong>${index + 1}</strong>. ${text}
+        </div>
+      `).join("");
+
+      document.getElementById("detailTextList").innerHTML = p.detailTexts.map(text => `
+        <li>${text}</li>
       `).join("");
     }
 
@@ -1526,7 +2389,9 @@
 
     function goOrderForm() {
       const p = getSelectedProduct();
+
       setPage("form");
+
       document.getElementById("formQty").value = String(state.qty);
       document.getElementById("formProductPrice").textContent = money(p.price);
       document.getElementById("formSummaryQty").textContent = `${state.qty}개`;
@@ -1537,53 +2402,67 @@
     function syncFormQty() {
       state.qty = Number(document.getElementById("formQty").value);
       const p = getSelectedProduct();
+
       document.getElementById("formSummaryQty").textContent = `${state.qty}개`;
       document.getElementById("formTotal").textContent = money(p.price * state.qty);
     }
 
+    function showError(message) {
+      const error = document.getElementById("formError");
+      error.textContent = message;
+      error.classList.add("show");
+      error.scrollIntoView({ behavior:"smooth", block:"center" });
+    }
+
     function validateAndGoConfirm() {
       const p = getSelectedProduct();
-      const name = document.getElementById("buyerName").value.trim();
+
+      const buyerName = document.getElementById("buyerName").value.trim();
       const phone = document.getElementById("buyerPhone").value.trim();
       const address = document.getElementById("buyerAddress").value.trim();
       const addressDetail = document.getElementById("buyerAddressDetail").value.trim();
       const request = document.getElementById("buyerRequest").value.trim();
       const agree = document.getElementById("agreePrivacy").checked;
-      const error = document.getElementById("formError");
 
-      if (!name) return showError("구매자 이름을 입력해주세요.");
+      if (!buyerName) return showError("구매자 이름을 입력해주세요.");
       if (!phone) return showError("연락처를 입력해주세요.");
       if (!address) return showError("주소를 입력해주세요.");
       if (!agree) return showError("개인정보 수집·이용 동의가 필요합니다.");
 
       state.pendingOrder = {
-        productName: p.name,
-        productId: p.id,
-        buyerName: name,
+        productName:p.name,
+        productId:p.id,
+        brand:p.brand,
+        buyerName,
         phone,
-        address: `${address} ${addressDetail}`.trim(),
-        quantity: state.qty,
-        totalAmount: p.price * state.qty,
-        curatorName: p.curatorName,
-        curatorId: p.curatorId,
-        curatorLine: p.curatorLine,
+        address:`${address} ${addressDetail}`.trim(),
+        quantity:state.qty,
+        totalAmount:p.price * state.qty,
+        curatorName:p.curatorName,
+        curatorId:p.curatorId,
+        curatorLine:p.curatorLine,
         request
       };
 
       renderConfirm();
       setPage("confirm");
+    }
 
-      function showError(msg) {
-        error.textContent = msg;
-        error.classList.add("show");
-        error.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
+    function confirmItem(label, value) {
+      return `
+        <div class="confirm-item">
+          <span>${label}</span>
+          <strong>${value || "-"}</strong>
+        </div>
+      `;
     }
 
     function renderConfirm() {
       const o = state.pendingOrder;
+
       document.getElementById("confirmList").innerHTML = `
         ${confirmItem("상품명", o.productName)}
+        ${confirmItem("브랜드", o.brand)}
         ${confirmItem("수량", o.quantity + "개")}
         ${confirmItem("총 주문 금액", money(o.totalAmount))}
         ${confirmItem("구매자 이름", o.buyerName)}
@@ -1591,42 +2470,43 @@
         ${confirmItem("주소", o.address)}
         ${confirmItem("담당 큐레이터", o.curatorName)}
         ${confirmItem("추천 문구", "“" + o.curatorLine + "”")}
-      `;
-    }
-
-    function confirmItem(label, value) {
-      return `
-        <div class="confirm-item">
-          <span>${label}</span>
-          <strong>${value}</strong>
-        </div>
+        ${confirmItem("요청사항", o.request || "-")}
       `;
     }
 
     function completeOrder() {
-      if (!state.pendingOrder) return goList();
+      if (!state.pendingOrder) {
+        goList();
+        return;
+      }
 
       const p = getSelectedProduct();
       const now = new Date();
-      const orderNo = "GB" + now.getFullYear() + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0") + "-" + Math.floor(100000 + Math.random() * 900000);
+      const orderNo = "GB" +
+        now.getFullYear() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0") +
+        "-" +
+        Math.floor(100000 + Math.random() * 900000);
 
       const order = {
         orderNo,
-        productName: state.pendingOrder.productName,
-        productId: state.pendingOrder.productId,
-        buyerName: state.pendingOrder.buyerName,
-        phone: state.pendingOrder.phone,
-        address: state.pendingOrder.address,
-        quantity: state.pendingOrder.quantity,
-        totalAmount: state.pendingOrder.totalAmount,
-        curatorName: state.pendingOrder.curatorName,
-        curatorId: state.pendingOrder.curatorId,
-        orderStatus: "주문접수",
-        orderDate: now.toLocaleString("ko-KR"),
-        commissionRate: p.commissionRate,
-        expectedCommission: Math.round(p.price * state.pendingOrder.quantity * p.commissionRate),
-        curatorLine: state.pendingOrder.curatorLine,
-        request: state.pendingOrder.request
+        productName:state.pendingOrder.productName,
+        productId:state.pendingOrder.productId,
+        brand:state.pendingOrder.brand,
+        buyerName:state.pendingOrder.buyerName,
+        phone:state.pendingOrder.phone,
+        address:state.pendingOrder.address,
+        quantity:state.pendingOrder.quantity,
+        totalAmount:state.pendingOrder.totalAmount,
+        curatorName:state.pendingOrder.curatorName,
+        curatorId:state.pendingOrder.curatorId,
+        curatorLine:state.pendingOrder.curatorLine,
+        request:state.pendingOrder.request,
+        orderStatus:"주문접수",
+        orderDate:now.toLocaleString("ko-KR"),
+        commissionRate:p.commissionRate,
+        expectedCommission:Math.round(p.price * state.pendingOrder.quantity * p.commissionRate)
       };
 
       const orders = getOrders();
@@ -1642,9 +2522,11 @@
 
     function renderComplete() {
       const o = state.lastOrder;
+
       document.getElementById("completeSummary").innerHTML = `
         ${confirmItem("주문번호", o.orderNo)}
         ${confirmItem("상품명", o.productName)}
+        ${confirmItem("브랜드", o.brand)}
         ${confirmItem("수량", o.quantity + "개")}
         ${confirmItem("총 주문 금액", money(o.totalAmount))}
         ${confirmItem("큐레이터", o.curatorName)}
@@ -1670,11 +2552,13 @@
           <h3>${o.productName}</h3>
           <div class="order-meta">
             <div>주문번호: ${o.orderNo}</div>
+            <div>브랜드: ${o.brand || "-"}</div>
             <div>주문자: ${o.buyerName} · ${o.phone}</div>
             <div>수량/금액: ${o.quantity}개 · ${money(o.totalAmount)}</div>
             <div>상태: ${o.orderStatus} · 주문일: ${o.orderDate}</div>
             <div>큐레이터: ${o.curatorName} · 커미션 예정액: ${money(o.expectedCommission)}</div>
             <div>주소: ${o.address}</div>
+            <div>요청사항: ${o.request || "-"}</div>
           </div>
         </article>
       `).join("");
