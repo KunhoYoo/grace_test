@@ -1,2577 +1,2297 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>우리동네 공동구매</title>
+  <title>Kall | Korea Call Assistant</title>
   <style>
     :root {
-      --bg:#f6f7f9;
-      --card:#fff;
-      --text:#191f28;
-      --sub:#6b7684;
-      --muted:#8b95a1;
-      --line:#e5e8eb;
-      --green:#03c75a;
-      --green2:#00b050;
-      --blue:#3182f6;
-      --red:#f04452;
-      --orange:#ff7a00;
-      --black:#111827;
-      --shadow:0 12px 32px rgba(0,0,0,.08);
-      --softShadow:0 8px 22px rgba(0,0,0,.05);
-      --radius:22px;
-      --safeBottom:env(safe-area-inset-bottom);
-    }
-
-    * {
-      box-sizing:border-box;
-    }
-
-    html {
-      scroll-behavior:smooth;
-    }
-
-    body {
-      margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.45;
-      -webkit-font-smoothing:antialiased;
-    }
-
-    button,input,textarea,select {
-      font:inherit;
-    }
-
-    button {
-      border:0;
-      cursor:pointer;
-    }
-
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
-
-    .app {
-      max-width:1180px;
-      margin:0 auto;
-      padding-bottom:120px;
-    }
-
-    .topbar {
-      position:sticky;
-      top:0;
-      z-index:80;
-      background:rgba(246,247,249,.94);
-      backdrop-filter:blur(18px);
-      border-bottom:1px solid rgba(229,232,235,.95);
-    }
-
-    .top-inner {
-      max-width:1180px;
-      margin:0 auto;
-      padding:13px 16px 12px;
-    }
-
-    .brand-row {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:11px;
-    }
-
-    .brand {
-      display:flex;
-      align-items:center;
-      gap:9px;
-      font-weight:950;
-      font-size:20px;
-      letter-spacing:-.7px;
-      white-space:nowrap;
-    }
-
-    .brand-mark {
-      width:35px;
-      height:35px;
-      border-radius:13px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,#03c75a,#48d990);
-      color:#fff;
-      box-shadow:0 8px 18px rgba(3,199,90,.25);
-    }
-
-    .top-actions {
-      display:flex;
-      gap:7px;
-      align-items:center;
-    }
-
-    .mini-btn {
-      min-height:38px;
-      padding:0 12px;
-      border-radius:999px;
-      background:#fff;
-      border:1px solid var(--line);
-      color:var(--text);
-      font-size:13px;
-      font-weight:900;
-      box-shadow:0 4px 10px rgba(0,0,0,.03);
-    }
-
-    .search-wrap {
-      position:relative;
-      margin-bottom:11px;
-    }
-
-    .search-wrap input {
-      width:100%;
-      height:50px;
-      border:1px solid var(--line);
-      border-radius:16px;
-      background:#fff;
-      outline:none;
-      padding:0 16px 0 46px;
-      font-size:15px;
-      font-weight:700;
-      box-shadow:0 4px 12px rgba(0,0,0,.035);
-    }
-
-    .search-wrap input:focus {
-      border-color:var(--green);
-      box-shadow:0 0 0 4px rgba(3,199,90,.1);
-    }
-
-    .search-icon {
-      position:absolute;
-      left:16px;
-      top:50%;
-      transform:translateY(-50%);
-      color:var(--muted);
-      font-size:20px;
-    }
-
-    .tabs {
-      display:flex;
-      gap:8px;
-      overflow-x:auto;
-      padding-bottom:2px;
-      scrollbar-width:none;
-    }
-
-    .tabs::-webkit-scrollbar {
-      display:none;
-    }
-
-    .tab {
-      flex:0 0 auto;
-      min-height:38px;
-      padding:0 14px;
-      border-radius:999px;
-      background:#fff;
-      border:1px solid var(--line);
-      color:var(--sub);
-      font-size:14px;
-      font-weight:900;
-    }
-
-    .tab.active {
-      background:var(--black);
-      border-color:var(--black);
-      color:#fff;
-    }
-
-    .page {
-      display:none;
-      padding:18px 16px;
-      animation:fade .18s ease;
-    }
-
-    .page.active {
-      display:block;
-    }
-
-    @keyframes fade {
-      from { opacity:0; transform:translateY(6px); }
-      to { opacity:1; transform:translateY(0); }
-    }
-
-    .hero {
-      display:grid;
-      gap:18px;
-      background:linear-gradient(135deg,#fff,#effff6);
-      border:1px solid var(--line);
-      border-radius:28px;
-      padding:22px;
-      margin-bottom:18px;
-      box-shadow:var(--softShadow);
-      overflow:hidden;
-      position:relative;
-    }
-
-    .hero::after {
-      content:"";
-      position:absolute;
-      right:-40px;
-      bottom:-55px;
-      width:180px;
-      height:180px;
-      border-radius:50%;
-      background:rgba(3,199,90,.12);
-    }
-
-    .hero h1 {
-      position:relative;
-      z-index:1;
-      margin:0;
-      font-size:clamp(25px,4vw,40px);
-      line-height:1.13;
-      letter-spacing:-1.2px;
-    }
-
-    .hero p {
-      position:relative;
-      z-index:1;
-      margin:0;
-      color:var(--sub);
-      font-size:15px;
-      font-weight:700;
-      max-width:620px;
-    }
-
-    .hero-badges {
-      position:relative;
-      z-index:1;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .hero-badge {
-      padding:8px 11px;
-      border-radius:999px;
-      background:#fff;
-      border:1px solid var(--line);
-      font-size:13px;
-      font-weight:900;
-      color:#26313d;
-      box-shadow:0 5px 14px rgba(0,0,0,.04);
-    }
-
-    .section-head {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      gap:12px;
-      margin:22px 2px 12px;
-    }
-
-    .section-head h2 {
-      margin:0;
-      font-size:21px;
-      letter-spacing:-.5px;
-    }
-
-    .section-head span {
-      color:var(--sub);
-      font-size:13px;
-      font-weight:900;
-    }
-
-    .grid {
-      display:grid;
-      grid-template-columns:1fr;
-      gap:14px;
-    }
-
-    .product-card {
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:24px;
-      overflow:hidden;
-      box-shadow:var(--softShadow);
-      transition:.16s ease;
-    }
-
-    .product-card:hover {
-      transform:translateY(-2px);
-      box-shadow:var(--shadow);
-    }
-
-    .thumb {
-      position:relative;
-      aspect-ratio:4/3;
-      background:var(--visual);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-    }
-
-    .thumb::before {
-      content:"";
-      position:absolute;
-      inset:18px;
-      border-radius:24px;
-      background:rgba(255,255,255,.24);
-      filter:blur(.2px);
-    }
-
-    .emoji {
-      position:relative;
-      z-index:1;
-      font-size:62px;
-      filter:drop-shadow(0 8px 12px rgba(0,0,0,.12));
-    }
-
-    .badges {
-      position:absolute;
-      left:12px;
-      top:12px;
-      z-index:2;
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-    }
-
-    .badge {
-      display:inline-flex;
-      align-items:center;
-      min-height:27px;
-      padding:0 9px;
-      border-radius:999px;
-      background:rgba(255,255,255,.94);
-      color:#111827;
-      font-size:12px;
-      font-weight:950;
-      box-shadow:0 4px 12px rgba(0,0,0,.1);
-    }
-
-    .badge.hot {
-      color:var(--red);
-    }
-
-    .badge.blue {
-      color:var(--blue);
-    }
-
-    .card-body {
-      padding:16px;
-    }
-
-    .category-line {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:8px;
-    }
-
-    .category {
-      color:var(--green2);
-      font-size:12px;
-      font-weight:950;
-    }
-
-    .rating {
-      color:#f59e0b;
-      font-size:12px;
-      font-weight:950;
-    }
-
-    .product-title {
-      margin:0 0 6px;
-      font-size:18px;
-      line-height:1.3;
-      letter-spacing:-.35px;
-      font-weight:950;
-    }
-
-    .desc {
-      min-height:39px;
-      margin:0 0 12px;
-      color:var(--sub);
-      font-size:14px;
-      font-weight:700;
-    }
-
-    .price-row {
-      display:flex;
-      align-items:baseline;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:10px;
-    }
-
-    .price {
-      font-size:24px;
-      font-weight:1000;
-      letter-spacing:-.8px;
-    }
-
-    .stock {
-      color:var(--orange);
-      font-size:13px;
-      font-weight:950;
-      white-space:nowrap;
-    }
-
-    .original {
-      color:var(--muted);
-      font-size:13px;
-      font-weight:800;
-      text-decoration:line-through;
-      margin-bottom:2px;
-    }
-
-    .curator {
-      background:#f6f7f9;
-      border-radius:15px;
-      padding:10px 12px;
-      color:#343c46;
-      font-size:13px;
-      font-weight:800;
-      margin:12px 0 14px;
-    }
-
-    .btn {
-      width:100%;
-      min-height:52px;
-      border-radius:16px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:7px;
-      font-size:16px;
-      font-weight:950;
-      transition:.12s ease;
-    }
-
-    .btn:active {
-      transform:scale(.985);
-    }
-
-    .btn-primary {
-      background:var(--green);
-      color:#fff;
-      box-shadow:0 9px 20px rgba(3,199,90,.24);
-    }
-
-    .btn-primary:hover {
-      background:var(--green2);
-    }
-
-    .btn-dark {
-      background:var(--black);
-      color:#fff;
-    }
-
-    .btn-ghost {
-      background:#fff;
-      color:var(--text);
-      border:1px solid var(--line);
-    }
-
-    .btn-danger {
-      background:#fff0f1;
-      color:var(--red);
-      border:1px solid #ffd4d8;
-    }
-
-    .back {
-      width:auto;
-      min-height:40px;
-      padding:0 13px;
-      margin-bottom:12px;
-      border-radius:999px;
-      background:#fff;
-      border:1px solid var(--line);
-      color:var(--text);
-      font-size:14px;
-      font-weight:950;
-    }
-
-    .stepper {
-      display:flex;
-      gap:7px;
-      overflow-x:auto;
-      margin-bottom:16px;
-      scrollbar-width:none;
-    }
-
-    .stepper::-webkit-scrollbar {
-      display:none;
-    }
-
-    .step {
-      flex:0 0 auto;
-      min-height:32px;
-      padding:0 11px;
-      border-radius:999px;
-      display:flex;
-      align-items:center;
-      background:#e9edf1;
-      color:var(--sub);
-      font-size:12px;
-      font-weight:950;
-    }
-
-    .step.active {
-      background:var(--black);
-      color:#fff;
-    }
-
-    .detail-grid {
-      display:grid;
-      grid-template-columns:1fr;
-      gap:16px;
-    }
-
-    .detail-image,
-    .detail-box,
-    .soft-card,
-    .form-card {
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:28px;
-      overflow:hidden;
-      box-shadow:var(--softShadow);
-    }
-
-    .main-visual {
-      aspect-ratio:1/1;
-      display:grid;
-      place-items:center;
-      background:var(--visual);
-      position:relative;
-    }
-
-    .main-visual::before {
-      content:"";
-      position:absolute;
-      inset:34px;
-      border-radius:34px;
-      background:rgba(255,255,255,.22);
-    }
-
-    .main-visual span {
-      position:relative;
-      z-index:1;
-      font-size:clamp(95px,20vw,170px);
-      filter:drop-shadow(0 14px 18px rgba(0,0,0,.12));
-    }
-
-    .detail-box {
-      padding:20px;
-    }
-
-    .chips {
-      display:flex;
-      gap:7px;
-      flex-wrap:wrap;
-      margin-bottom:13px;
-    }
-
-    .chip {
-      padding:7px 10px;
-      border-radius:999px;
-      background:#eefbf4;
-      color:#008a3d;
-      font-size:12px;
-      font-weight:950;
-    }
-
-    .chip.gray {
-      background:#f2f4f6;
-      color:var(--sub);
-    }
-
-    .detail-title {
-      margin:0 0 8px;
-      font-size:clamp(25px,4vw,36px);
-      line-height:1.16;
-      letter-spacing:-1.1px;
-    }
-
-    .detail-desc {
-      margin:0 0 14px;
-      color:var(--sub);
-      font-size:15px;
-      font-weight:750;
-    }
-
-    .detail-price {
-      font-size:35px;
-      font-weight:1000;
-      letter-spacing:-1.2px;
-      margin:4px 0 2px;
-    }
-
-    .shipping {
-      margin:0 0 16px;
-      color:var(--sub);
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .buy-info {
-      display:grid;
-      gap:10px;
-      margin:14px 0;
-      background:#f7f8fa;
-      border-radius:18px;
-      padding:13px;
-    }
-
-    .info-line {
-      display:flex;
-      justify-content:space-between;
-      gap:14px;
-      color:#3d4752;
-      font-size:14px;
-      font-weight:850;
-    }
-
-    .info-line strong {
-      color:var(--text);
-      text-align:right;
-    }
-
-    .qty-box {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      background:#f7f8fa;
-      border-radius:18px;
-      padding:12px;
-      margin:16px 0;
-    }
-
-    .qty-box > strong {
-      font-size:15px;
-    }
-
-    .qty-control {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:999px;
-      padding:6px;
-    }
-
-    .qty-control button {
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      background:#f2f4f6;
-      color:var(--text);
-      font-size:19px;
-      font-weight:950;
-    }
-
-    .qty-control strong {
-      min-width:28px;
-      text-align:center;
-      font-size:18px;
-      font-weight:950;
-    }
-
-    .total {
-      display:flex;
-      justify-content:space-between;
-      align-items:baseline;
-      gap:14px;
-      padding-top:16px;
-      border-top:1px solid var(--line);
-      margin-bottom:16px;
-    }
-
-    .total span {
-      color:var(--sub);
-      font-size:14px;
-      font-weight:900;
-    }
-
-    .total strong {
-      font-size:25px;
-      font-weight:1000;
-      letter-spacing:-.8px;
-      text-align:right;
-    }
-
-    .source-btn {
-      display:inline-flex;
-      width:100%;
-      min-height:46px;
-      margin-top:10px;
-      align-items:center;
-      justify-content:center;
-      border-radius:15px;
-      border:1px solid var(--line);
-      background:#fff;
-      color:#3d4752;
-      font-size:14px;
-      font-weight:950;
-    }
-
-    .stack {
-      display:grid;
-      gap:14px;
-      margin-top:16px;
-    }
-
-    .soft-card {
-      padding:18px;
-    }
-
-    .soft-card h3 {
-      margin:0 0 10px;
-      font-size:19px;
-      letter-spacing:-.4px;
-    }
-
-    .soft-card p {
-      margin:0;
-      color:var(--sub);
-      font-weight:750;
-    }
-
-    .recommend {
-      background:linear-gradient(135deg,#fffaf0,#fff);
-      border-color:#ffe2ad;
-    }
-
-    .detail-banner {
-      min-height:430px;
-      border-radius:24px;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:24px;
-      background:
-        radial-gradient(circle at 26% 18%, rgba(255,255,255,.78), transparent 25%),
-        var(--visual);
-      overflow:hidden;
-    }
-
-    .detail-banner .big {
-      font-size:96px;
-      line-height:1;
-      margin-bottom:18px;
-    }
-
-    .detail-banner h3 {
-      margin:0 0 8px;
-      font-size:28px;
-      line-height:1.2;
-      letter-spacing:-1px;
-    }
-
-    .detail-banner p {
-      max-width:520px;
-      margin:0 auto;
-      color:#3d4752;
-      font-weight:850;
-    }
-
-    .feature-grid {
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-    }
-
-    .feature {
-      padding:14px;
-      border-radius:16px;
-      background:#f7f8fa;
-      color:#334155;
-      font-size:14px;
-      font-weight:850;
-    }
-
-    .notice-list {
-      display:grid;
-      gap:10px;
-      padding:0;
-      margin:0;
-      list-style:none;
-    }
-
-    .notice-list li {
-      padding:13px 14px;
-      border-radius:16px;
-      background:#f7f8fa;
-      color:#3d4752;
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .form-shell,
-    .confirm-shell,
-    .complete-shell,
-    .orders-shell {
-      max-width:780px;
-      margin:0 auto;
-    }
-
-    .form-card {
-      padding:20px;
-    }
-
-    .form-title {
-      margin:0 0 6px;
-      font-size:26px;
-      letter-spacing:-.8px;
-    }
-
-    .form-sub {
-      margin:0 0 18px;
-      color:var(--sub);
-      font-weight:750;
-    }
-
-    .form-grid {
-      display:grid;
-      gap:14px;
-    }
-
-    .field label {
-      display:block;
-      margin-bottom:7px;
-      color:#343c46;
-      font-size:14px;
-      font-weight:950;
-    }
-
-    .field input,
-    .field textarea,
-    .field select {
-      width:100%;
-      min-height:52px;
-      border:1px solid var(--line);
-      border-radius:15px;
-      background:#fbfcfd;
-      outline:none;
-      padding:13px 14px;
-      font-size:16px;
-      font-weight:700;
-    }
-
-    .field textarea {
-      min-height:96px;
-      resize:vertical;
-    }
-
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
-      border-color:var(--green);
-      background:#fff;
-      box-shadow:0 0 0 4px rgba(3,199,90,.1);
-    }
-
-    .agree {
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      padding:14px;
-      border-radius:16px;
-      background:#f7f8fa;
-      color:#3d4752;
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .agree input {
-      width:20px;
-      height:20px;
-      margin-top:1px;
-      accent-color:var(--green);
-    }
-
-    .summary {
-      display:grid;
-      gap:9px;
-      margin:16px 0;
-      padding:16px;
-      border-radius:20px;
-      background:#f7f8fa;
-    }
-
-    .summary-line {
-      display:flex;
-      justify-content:space-between;
-      gap:16px;
-      color:#3d4752;
-      font-size:14px;
-      font-weight:850;
-    }
-
-    .summary-line.final {
-      border-top:1px solid var(--line);
-      padding-top:12px;
-      color:var(--text);
-      font-size:18px;
-      font-weight:1000;
-    }
-
-    .error {
-      display:none;
-      padding:12px 14px;
-      border-radius:15px;
-      background:#fff0f1;
-      border:1px solid #ffd4d8;
-      color:var(--red);
-      font-size:14px;
-      font-weight:900;
-      margin-bottom:14px;
-    }
-
-    .error.show {
-      display:block;
-    }
-
-    .btn-row {
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-      margin-top:14px;
-    }
-
-    .confirm-list {
-      display:grid;
-      gap:10px;
-      margin:18px 0;
-    }
-
-    .confirm-item {
-      display:grid;
-      grid-template-columns:116px 1fr;
-      gap:12px;
-      padding:14px;
-      border-radius:16px;
-      background:#f7f8fa;
-    }
-
-    .confirm-item span {
-      color:var(--sub);
-      font-size:14px;
-      font-weight:900;
-    }
-
-    .confirm-item strong {
-      text-align:right;
-      word-break:keep-all;
-      font-size:14px;
-      font-weight:950;
-    }
-
-    .complete-card {
-      text-align:center;
-      padding:30px 20px;
-      border-radius:30px;
-      background:#fff;
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-    }
-
-    .check {
-      width:82px;
-      height:82px;
-      margin:0 auto 16px;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,#03c75a,#5ee493);
-      color:#fff;
-      font-size:44px;
-      font-weight:950;
-      box-shadow:0 14px 32px rgba(3,199,90,.3);
-    }
-
-    .complete-card h2 {
-      margin:0 0 8px;
-      font-size:28px;
-      letter-spacing:-.9px;
-    }
-
-    .complete-card > p {
-      margin:0;
-      color:var(--sub);
-      font-weight:800;
-    }
-
-    .orders-list {
-      display:grid;
-      gap:12px;
-    }
-
-    .order-card {
-      padding:16px;
-      border-radius:22px;
-      background:#fff;
-      border:1px solid var(--line);
-      box-shadow:var(--softShadow);
-    }
-
-    .order-card h3 {
-      margin:0 0 8px;
-      font-size:17px;
-      line-height:1.35;
-    }
-
-    .order-meta {
-      display:grid;
-      gap:6px;
-      color:var(--sub);
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .empty {
-      padding:30px 18px;
-      border:1px dashed #cfd6dd;
-      border-radius:22px;
-      background:#fff;
-      text-align:center;
-      color:var(--sub);
-      font-weight:900;
-    }
-
-    .fixed-buy {
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:90;
-      display:none;
-      padding:12px 16px calc(12px + var(--safeBottom));
-      background:rgba(255,255,255,.94);
-      backdrop-filter:blur(16px);
-      border-top:1px solid var(--line);
-    }
-
-    .fixed-buy.show {
-      display:block;
-    }
-
-    .fixed-inner {
-      max-width:780px;
-      margin:0 auto;
-      display:grid;
-      grid-template-columns:1fr 1.4fr;
-      gap:10px;
-      align-items:center;
-    }
-
-    .fixed-price {
-      font-size:18px;
-      font-weight:1000;
-      letter-spacing:-.7px;
-    }
-
-    .fixed-price small {
-      display:block;
-      color:var(--sub);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:0;
-    }
-
-    @media (min-width:640px) {
-      .grid {
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .form-grid.two {
-        grid-template-columns:1fr 1fr;
-      }
-
-      .btn-row {
-        grid-template-columns:1fr 1fr;
-      }
-
-      .feature-grid {
-        grid-template-columns:repeat(3,1fr);
-      }
-    }
-
-    @media (min-width:960px) {
-      .top-inner {
-        padding-left:24px;
-        padding-right:24px;
-      }
-
-      .page {
-        padding:24px;
-      }
-
-      .grid {
-        grid-template-columns:repeat(3,1fr);
-      }
-
-      .detail-grid {
-        grid-template-columns:1.04fr .96fr;
-        align-items:start;
-      }
-
-      .detail-box {
-        position:sticky;
-        top:142px;
-      }
-
-      .fixed-buy.show {
-        display:none;
-      }
-    }
+      --bg: #f8fafc;
+      --surface: rgba(255, 255, 255, 0.86);
+      --surface-solid: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --soft: #e2e8f0;
+      --soft-2: #f1f5f9;
+      --primary: #2563eb;
+      --primary-2: #4f46e5;
+      --violet: #7c3aed;
+      --cyan: #06b6d4;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+      --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --header-h: 76px;
+    }* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+}
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  filter: blur(22px);
+  opacity: 0.26;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob-a {
+  top: -180px;
+  right: -160px;
+  background: radial-gradient(circle, #60a5fa, transparent 65%);
+}
+
+.blob-b {
+  top: 430px;
+  left: -220px;
+  background: radial-gradient(circle, #a78bfa, transparent 65%);
+}
+
+.blob-c {
+  bottom: 360px;
+  right: -260px;
+  background: radial-gradient(circle, #22d3ee, transparent 65%);
+}
+
+.container {
+  width: min(1160px, calc(100% - 40px));
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--header-h);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  background: rgba(248, 250, 252, 0.72);
+  backdrop-filter: blur(18px);
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.header.scrolled {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.nav-wrap {
+  width: min(1160px, calc(100% - 40px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: max-content;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--primary), var(--violet));
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.28);
+}
+
+.brand-title {
+  display: grid;
+  line-height: 1.05;
+}
+
+.brand-title strong {
+  font-size: 21px;
+  letter-spacing: -0.04em;
+}
+
+.brand-title span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid rgba(226, 232, 240, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.nav-links a,
+.nav-links button {
+  color: #334155;
+  background: transparent;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+  transition: 0.18s ease;
+  white-space: nowrap;
+}
+
+.nav-links a:hover,
+.nav-links button:hover {
+  color: var(--primary);
+  background: #eff6ff;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.28);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 18px 42px rgba(37, 99, 235, 0.34);
+}
+
+.btn-ghost {
+  color: #334155;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--soft);
+}
+
+.btn-ghost:hover {
+  background: white;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-dark {
+  color: white;
+  background: #0f172a;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.24);
+}
+
+.btn-danger {
+  color: white;
+  background: var(--danger);
+}
+
+.mobile-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid var(--soft);
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: var(--header-h);
+  left: 20px;
+  right: 20px;
+  z-index: 49;
+  padding: 14px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--soft);
+}
+
+.mobile-menu.open {
+  display: grid;
+  gap: 8px;
+}
+
+.mobile-menu a,
+.mobile-menu button {
+  width: 100%;
+  padding: 14px;
+  text-align: left;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 900;
+}
+
+.hero {
+  padding: calc(var(--header-h) + 72px) 0 92px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+  gap: 54px;
+  align-items: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 900;
+  font-size: 13px;
+  border: 1px solid #c7d2fe;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+.hero h1 {
+  margin: 22px 0 18px;
+  font-size: clamp(46px, 7vw, 82px);
+  line-height: 0.94;
+  letter-spacing: -0.07em;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--violet), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-copy {
+  max-width: 640px;
+  color: #475569;
+  font-size: 19px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 30px 0 16px;
+}
+
+.mini-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.mini-proof span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-panel {
+  position: relative;
+  min-height: 620px;
+}
+
+.phone-shell {
+  width: min(390px, 100%);
+  margin: 0 auto;
+  padding: 14px;
+  border-radius: 44px;
+  background: #0f172a;
+  box-shadow: 0 34px 90px rgba(15, 23, 42, 0.3);
+  transform: rotate(2deg);
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(2deg); }
+  50% { transform: translateY(-12px) rotate(1deg); }
+}
+
+.phone-screen {
+  overflow: hidden;
+  border-radius: 34px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  min-height: 590px;
+  padding: 22px;
+}
+
+.phone-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.phone-title strong {
+  display: block;
+  font-size: 19px;
+  letter-spacing: -0.04em;
+}
+
+.phone-title span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #dbeafe, #ede9fe);
+  color: var(--primary-2);
+  font-weight: 900;
+}
+
+.balance-card {
+  padding: 18px;
+  border-radius: 24px;
+  color: white;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.32), transparent 30%),
+    linear-gradient(135deg, var(--primary), var(--violet));
+  box-shadow: 0 18px 40px rgba(79, 70, 229, 0.3);
+  margin-bottom: 16px;
+}
+
+.balance-card small {
+  color: rgba(255,255,255,0.78);
+  font-weight: 800;
+}
+
+.balance-card h3 {
+  margin: 8px 0 0;
+  font-size: 34px;
+  letter-spacing: -0.05em;
+}
+
+.request-card {
+  padding: 16px;
+  border: 1px solid var(--soft);
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  margin-bottom: 12px;
+}
+
+.request-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.request-head strong {
+  letter-spacing: -0.03em;
+}
+
+.request-meta {
+  display: grid;
+  gap: 8px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.hero-floating {
+  position: absolute;
+  right: 0;
+  bottom: 52px;
+  width: 240px;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.76);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.hero-floating strong {
+  display: block;
+  margin-bottom: 4px;
+  letter-spacing: -0.03em;
+}
+
+.hero-floating p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.section {
+  padding: 86px 0;
+}
+
+.section-head {
+  max-width: 760px;
+  margin-bottom: 34px;
+}
+
+.section-head.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.section-kicker {
+  color: var(--primary);
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.section h2 {
+  margin-bottom: 12px;
+  font-size: clamp(32px, 4.8vw, 54px);
+  line-height: 1.02;
+  letter-spacing: -0.06em;
+}
+
+.section-head p {
+  color: var(--muted);
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.trust-item {
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.82);
+  border: 1px solid var(--soft);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+}
+
+.trust-item b {
+  display: block;
+  font-size: 22px;
+  letter-spacing: -0.04em;
+  margin-bottom: 4px;
+}
+
+.trust-item span {
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.grid-4,
+.grid-3,
+.grid-2 {
+  display: grid;
+  gap: 18px;
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+  border-radius: var(--radius-xl);
+  background: rgba(255,255,255,0.86);
+  border: 1px solid rgba(226, 232, 240, 0.84);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.06);
+  padding: 24px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+  border-color: #bfdbfe;
+}
+
+.step-num,
+.icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #dbeafe, #ede9fe);
+  color: var(--primary-2);
+  font-weight: 1000;
+  margin-bottom: 18px;
+  font-size: 21px;
+}
+
+.card h3 {
+  margin-bottom: 8px;
+  font-size: 21px;
+  letter-spacing: -0.04em;
+}
+
+.card p {
+  color: var(--muted);
+  margin-bottom: 0;
+  font-weight: 650;
+}
+
+.service-card ul {
+  padding-left: 18px;
+  color: #475569;
+  font-weight: 720;
+  margin: 16px 0 20px;
+}
+
+.service-card li + li {
+  margin-top: 5px;
+}
+
+.service-card .btn {
+  width: 100%;
+}
+
+.pricing-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card.featured {
+  color: white;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(255,255,255,0.22), transparent 34%),
+    linear-gradient(135deg, #1d4ed8, #6d28d9);
+  border-color: transparent;
+  transform: scale(1.02);
+}
+
+.pricing-card.featured p,
+.pricing-card.featured li,
+.pricing-card.featured .price-caption {
+  color: rgba(255,255,255,0.82);
+}
+
+.price {
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  font-weight: 1000;
+  margin: 20px 0 6px;
+}
+
+.price-caption {
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.pricing-card ul {
+  margin: 22px 0;
+  padding-left: 20px;
+  color: #475569;
+  font-weight: 760;
+}
+
+.pricing-card li + li {
+  margin-top: 9px;
+}
+
+.pricing-card .btn {
+  width: 100%;
+}
+
+.demo-wrap {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.form-preview {
+  display: grid;
+  gap: 12px;
+}
+
+.preview-field {
+  padding: 14px 16px;
+  border: 1px solid var(--soft);
+  border-radius: 16px;
+  background: #f8fafc;
+}
+
+.preview-field span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 3px;
+}
+
+.preview-field b {
+  letter-spacing: -0.02em;
+}
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 14px;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.timeline-dot {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 1000;
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.timeline-item.done .timeline-dot {
+  background: #dcfce7;
+  color: var(--success);
+}
+
+.timeline-item.active .timeline-dot {
+  background: #dbeafe;
+  color: var(--primary);
+  box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.08);
+}
+
+.timeline-content {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid var(--soft);
+}
+
+.timeline-content strong {
+  display: block;
+  letter-spacing: -0.03em;
+}
+
+.timeline-content span {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.mypage-preview {
+  overflow: hidden;
+}
+
+.dash-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.dash-mini {
+  padding: 16px;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid var(--soft);
+}
+
+.dash-mini span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.dash-mini b {
+  display: block;
+  margin-top: 4px;
+  font-size: 22px;
+  letter-spacing: -0.05em;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 22px;
+  border: 1px solid var(--soft);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 840px;
+  background: white;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 15px 14px;
+  border-bottom: 1px solid var(--soft-2);
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 1000;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.badge.confirmed { background: #dcfce7; color: #15803d; }
+.badge.progress { background: #dbeafe; color: #1d4ed8; }
+.badge.pending { background: #fef3c7; color: #b45309; }
+.badge.completed { background: #e2e8f0; color: #475569; }
+.badge.cancelled { background: #fee2e2; color: #b91c1c; }
+
+.text-btn {
+  background: #eff6ff;
+  color: var(--primary);
+  padding: 8px 11px;
+  border-radius: 999px;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+
+.testimonial {
+  min-height: 230px;
+}
+
+.stars {
+  color: #f59e0b;
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+
+.reviewer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.reviewer .avatar {
+  flex: 0 0 auto;
+}
+
+.reviewer strong {
+  display: block;
+  letter-spacing: -0.03em;
+}
+
+.reviewer span {
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.faq-list {
+  display: grid;
+  gap: 12px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-radius: 22px;
+  background: white;
+  border: 1px solid var(--soft);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  background: white;
+  text-align: left;
+  color: var(--text);
+  font-weight: 1000;
+  letter-spacing: -0.03em;
+}
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.24s ease;
+}
+
+.faq-a p {
+  padding: 0 20px 20px;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.faq-item.open .faq-a {
+  max-height: 180px;
+}
+
+.final-cta {
+  padding: 66px;
+  border-radius: 38px;
+  color: white;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255,255,255,0.22), transparent 34%),
+    radial-gradient(circle at 82% 12%, rgba(34,211,238,0.34), transparent 36%),
+    linear-gradient(135deg, #172554, #4f46e5 55%, #7c3aed);
+  box-shadow: 0 28px 80px rgba(37, 99, 235, 0.25);
+  text-align: center;
+}
+
+.final-cta h2 {
+  margin-bottom: 14px;
+}
+
+.final-cta p {
+  max-width: 720px;
+  margin: 0 auto 28px;
+  color: rgba(255,255,255,0.78);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.footer {
+  padding: 64px 0 34px;
+  color: #475569;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 34px;
+  padding-bottom: 34px;
+  border-bottom: 1px solid var(--soft);
+}
+
+.footer h4 {
+  margin: 0 0 12px;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+
+.footer a,
+.footer span {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+  font-weight: 750;
+}
+
+.footer-bottom {
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.54);
+  backdrop-filter: blur(10px);
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal {
+  width: min(720px, 100%);
+  max-height: min(88vh, 900px);
+  overflow: auto;
+  background: white;
+  border-radius: 30px;
+  box-shadow: 0 30px 110px rgba(0,0,0,0.32);
+  animation: modalIn 0.2s ease;
+}
+
+.modal.wide {
+  width: min(1080px, 100%);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+  padding: 24px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--soft);
+}
+
+.modal-head h3 {
+  margin: 0 0 4px;
+  font-size: 25px;
+  letter-spacing: -0.05em;
+}
+
+.modal-head p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.close-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.form-grid .full {
+  grid-column: 1 / -1;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  color: #334155;
+  font-weight: 900;
+  font-size: 13px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--soft);
+  border-radius: 16px;
+  background: #f8fafc;
+  color: var(--text);
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  background: white;
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.upload-mock {
+  display: grid;
+  place-items: center;
+  min-height: 112px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+  background: #f8fafc;
+  color: var(--muted);
+  font-weight: 800;
+  text-align: center;
+  padding: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.toast-wrap {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 200;
+  display: grid;
+  gap: 10px;
+  width: min(360px, calc(100% - 36px));
+}
+
+.toast {
+  padding: 14px 16px;
+  border-radius: 18px;
+  color: white;
+  background: #0f172a;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.24);
+  font-weight: 850;
+  animation: toastIn 0.18s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.detail-box {
+  padding: 15px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid var(--soft);
+}
+
+.detail-box span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 3px;
+}
+
+.detail-box b {
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 980px) {
+  .nav-links,
+  .nav-actions .desktop-only {
+    display: none;
+  }
+
+  .mobile-toggle {
+    display: grid;
+    place-items: center;
+  }
+
+  .hero-grid,
+  .demo-wrap,
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-panel {
+    min-height: 560px;
+  }
+
+  .phone-shell {
+    transform: none;
+    animation: none;
+  }
+
+  .hero-floating {
+    right: 12px;
+    bottom: 6px;
+  }
+
+  .trust-grid,
+  .grid-4,
+  .grid-3,
+  .dash-cards,
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-h: 68px;
+  }
+
+  .container,
+  .nav-wrap {
+    width: min(100% - 28px, 1160px);
+  }
+
+  .brand-title span {
+    display: none;
+  }
+
+  .hero {
+    padding-top: calc(var(--header-h) + 38px);
+  }
+
+  .hero h1 {
+    font-size: 46px;
+  }
+
+  .hero-copy {
+    font-size: 16px;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .hero-panel {
+    min-height: auto;
+  }
+
+  .phone-screen {
+    min-height: auto;
+  }
+
+  .hero-floating {
+    position: static;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .trust-grid,
+  .grid-4,
+  .grid-3,
+  .dash-cards,
+  .footer-grid,
+  .form-grid,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .final-cta {
+    padding: 34px 20px;
+    border-radius: 28px;
+  }
+
+  .section {
+    padding: 62px 0;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .modal {
+    border-radius: 24px;
+  }
+
+  .modal-head,
+  .modal-body {
+    padding: 18px;
+  }
+}
+
   </style>
 </head>
-
 <body>
-  <header class="topbar">
-    <div class="top-inner">
-      <div class="brand-row">
-        <button class="brand" onclick="goList()" aria-label="상품 목록으로 이동" style="background:transparent;padding:0;">
-          <span class="brand-mark">동</span>
-          <span>우리동네 공동구매</span>
-        </button>
-        <div class="top-actions">
-          <button class="mini-btn" onclick="goOrders()">주문내역</button>
-        </div>
+  <div class="page">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div><header class="header" id="header">
+  <div class="nav-wrap">
+    <a href="#top" class="brand" aria-label="Kall home">
+      <div class="brand-mark">K</div>
+      <div class="brand-title">
+        <strong>Kall</strong>
+        <span>Korea Call Assistant</span>
       </div>
+    </a>
 
-      <div id="listControls">
-        <div class="search-wrap">
-          <span class="search-icon">⌕</span>
-          <input id="searchInput" type="search" placeholder="상품명, 브랜드, 카테고리 검색" oninput="renderProducts()" />
-        </div>
-        <nav class="tabs" id="categoryTabs"></nav>
-      </div>
-    </div>
-  </header>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#how">How it works</a>
+      <a href="#services">Services</a>
+      <a href="#pricing">Pricing</a>
+      <button type="button" data-open-mypage>My Page</button>
+      <a href="#faq">FAQ</a>
+    </nav>
 
-  <main class="app">
-    <section class="page active" id="listPage">
-      <div class="hero">
-        <h1>동네 큐레이터가 고른<br />실속 공동구매 상품</h1>
-        <p>부모님 선물, 건강식품, 간편식, 생활용품까지. 실제 판매 상품을 기반으로 공동구매 화면을 구성했습니다.</p>
-        <div class="hero-badges">
-          <span class="hero-badge">오늘의 공동구매</span>
-          <span class="hero-badge">큐레이터 추천</span>
-          <span class="hero-badge">모바일 간편 주문</span>
-        </div>
-      </div>
-
-      <div class="section-head">
-        <h2>공동구매 상품</h2>
-        <span id="productCount">0개 상품</span>
-      </div>
-
-      <div class="grid" id="productGrid"></div>
-    </section>
-
-    <section class="page" id="detailPage">
-      <button class="back" onclick="goList()">← 목록으로</button>
-
-      <div class="stepper">
-        <span class="step active">상품 선택</span>
-        <span class="step">주문 정보</span>
-        <span class="step">주문 확인</span>
-        <span class="step">완료</span>
-      </div>
-
-      <div class="detail-grid">
-        <div class="detail-image">
-          <div class="main-visual" id="detailVisual">
-            <span id="detailEmoji"></span>
-          </div>
-        </div>
-
-        <aside class="detail-box">
-          <div class="chips" id="detailChips"></div>
-          <h1 class="detail-title" id="detailTitle"></h1>
-          <p class="detail-desc" id="detailDesc"></p>
-          <div class="original" id="detailOriginal"></div>
-          <div class="detail-price" id="detailPrice"></div>
-          <p class="shipping" id="detailShipping"></p>
-
-          <div class="buy-info">
-            <div class="info-line">
-              <span>판매처 참고</span>
-              <strong id="detailSource"></strong>
-            </div>
-            <div class="info-line">
-              <span>공동구매 마감</span>
-              <strong id="detailDeadline"></strong>
-            </div>
-            <div class="info-line">
-              <span>남은 수량</span>
-              <strong id="detailStock"></strong>
-            </div>
-          </div>
-
-          <div class="qty-box">
-            <strong>수량 선택</strong>
-            <div class="qty-control">
-              <button onclick="changeQty(-1)" aria-label="수량 감소">−</button>
-              <strong id="detailQty">1</strong>
-              <button onclick="changeQty(1)" aria-label="수량 증가">+</button>
-            </div>
-          </div>
-
-          <div class="total">
-            <span>총 결제 예정 금액</span>
-            <strong id="detailTotal"></strong>
-          </div>
-
-          <button class="btn btn-primary" onclick="goOrderForm()">주문하기</button>
-          <a class="source-btn" id="sourceLink" href="#" target="_blank" rel="noopener">원문 상품 페이지 보기</a>
-        </aside>
-      </div>
-
-      <div class="stack">
-        <div class="soft-card recommend">
-          <h3 id="curatorTitle"></h3>
-          <p id="curatorDesc"></p>
-        </div>
-
-        <div class="soft-card">
-          <div class="detail-banner" id="detailBanner"></div>
-        </div>
-
-        <div class="soft-card">
-          <h3>상품 핵심 포인트</h3>
-          <div class="feature-grid" id="featureGrid"></div>
-        </div>
-
-        <div class="soft-card">
-          <h3>상세 설명</h3>
-          <ul class="notice-list" id="detailTextList"></ul>
-        </div>
-
-        <div class="soft-card">
-          <h3>배송/교환 안내</h3>
-          <ul class="notice-list">
-            <li>공동구매 상품은 주문 접수 후 순차 배송됩니다.</li>
-            <li>상품별 배송비와 도착일은 실제 판매처 정책에 따라 달라질 수 있습니다.</li>
-            <li>신선식품은 단순 변심 교환/반품이 제한될 수 있습니다.</li>
-            <li>재고 소진 시 공동구매가 조기 마감될 수 있습니다.</li>
-          </ul>
-        </div>
-
-        <div class="soft-card">
-          <h3>주문 전 확인사항</h3>
-          <ul class="notice-list">
-            <li>입력한 연락처로 주문 확인 연락이 갈 수 있습니다.</li>
-            <li>주소와 상세 주소를 정확히 입력해주세요.</li>
-            <li>상품 가격은 mock 데이터이며 실제 판매가와 다를 수 있습니다.</li>
-            <li>운영 투입 시 결제/배송/재고 API 연동이 필요합니다.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="formPage">
-      <div class="form-shell">
-        <button class="back" onclick="goDetail()">← 상품 상세로</button>
-
-        <div class="stepper">
-          <span class="step">상품 선택</span>
-          <span class="step active">주문 정보</span>
-          <span class="step">주문 확인</span>
-          <span class="step">완료</span>
-        </div>
-
-        <div class="form-card">
-          <h2 class="form-title">주문 정보를 입력해주세요</h2>
-          <p class="form-sub">배송과 주문 확인을 위해 필요한 정보입니다.</p>
-
-          <div class="error" id="formError"></div>
-
-          <div class="form-grid two">
-            <div class="field">
-              <label for="buyerName">구매자 이름</label>
-              <input id="buyerName" placeholder="예: 김영희" autocomplete="name" />
-            </div>
-
-            <div class="field">
-              <label for="buyerPhone">연락처</label>
-              <input id="buyerPhone" placeholder="예: 010-1234-5678" autocomplete="tel" />
-            </div>
-          </div>
-
-          <div class="form-grid" style="margin-top:14px;">
-            <div class="field">
-              <label for="buyerAddress">주소</label>
-              <input id="buyerAddress" placeholder="예: 서울시 강남구 테헤란로 00" autocomplete="street-address" />
-            </div>
-
-            <div class="field">
-              <label for="buyerAddressDetail">상세 주소</label>
-              <input id="buyerAddressDetail" placeholder="예: 101동 1001호" />
-            </div>
-
-            <div class="field">
-              <label for="formQty">수량</label>
-              <select id="formQty" onchange="syncFormQty()">
-                <option value="1">1개</option>
-                <option value="2">2개</option>
-                <option value="3">3개</option>
-                <option value="4">4개</option>
-                <option value="5">5개</option>
-                <option value="6">6개</option>
-                <option value="7">7개</option>
-                <option value="8">8개</option>
-                <option value="9">9개</option>
-                <option value="10">10개</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="buyerRequest">요청사항</label>
-              <textarea id="buyerRequest" placeholder="배송 시 요청사항이 있으면 입력해주세요."></textarea>
-            </div>
-
-            <label class="agree">
-              <input id="agreePrivacy" type="checkbox" />
-              <span>주문 확인 및 배송 안내를 위한 개인정보 수집·이용에 동의합니다.</span>
-            </label>
-          </div>
-
-          <div class="summary">
-            <div class="summary-line">
-              <span>상품 금액</span>
-              <strong id="formProductPrice"></strong>
-            </div>
-            <div class="summary-line">
-              <span>수량</span>
-              <strong id="formSummaryQty"></strong>
-            </div>
-            <div class="summary-line final">
-              <span>총 주문 금액</span>
-              <strong id="formTotal"></strong>
-            </div>
-          </div>
-
-          <button class="btn btn-primary" onclick="validateAndGoConfirm()">주문 확인하기</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="confirmPage">
-      <div class="confirm-shell">
-        <button class="back" onclick="goOrderForm()">← 주문 정보 수정</button>
-
-        <div class="stepper">
-          <span class="step">상품 선택</span>
-          <span class="step">주문 정보</span>
-          <span class="step active">주문 확인</span>
-          <span class="step">완료</span>
-        </div>
-
-        <div class="form-card">
-          <h2 class="form-title">주문 내용을 확인해주세요</h2>
-          <p class="form-sub">아래 내용으로 주문을 접수합니다.</p>
-
-          <div class="confirm-list" id="confirmList"></div>
-
-          <div class="btn-row">
-            <button class="btn btn-ghost" onclick="goOrderForm()">이전으로</button>
-            <button class="btn btn-primary" onclick="completeOrder()">주문 완료하기</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="completePage">
-      <div class="complete-shell">
-        <div class="stepper">
-          <span class="step">상품 선택</span>
-          <span class="step">주문 정보</span>
-          <span class="step">주문 확인</span>
-          <span class="step active">완료</span>
-        </div>
-
-        <div class="complete-card">
-          <div class="check">✓</div>
-          <h2>주문이 완료되었습니다</h2>
-          <p>주문이 정상적으로 접수되었습니다.</p>
-
-          <div class="confirm-list" id="completeSummary"></div>
-
-          <div class="soft-card" style="text-align:left;box-shadow:none;">
-            <h3>배송 안내</h3>
-            <p>상품 준비가 시작되면 담당 큐레이터 또는 운영자가 안내드릴 수 있습니다. 입력하신 연락처로 주문 확인 연락이 갈 수 있습니다.</p>
-          </div>
-
-          <div class="btn-row">
-            <button class="btn btn-ghost" onclick="goList()">다른 상품 더 보기</button>
-            <button class="btn btn-dark" onclick="goOrders()">주문 내역 확인</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="ordersPage">
-      <div class="orders-shell">
-        <button class="back" onclick="goList()">← 쇼핑 계속하기</button>
-
-        <div class="form-card">
-          <h2 class="form-title">주문 내역</h2>
-          <p class="form-sub">현재 브라우저 localStorage에 저장된 mock 주문 데이터입니다.</p>
-
-          <div class="orders-list" id="ordersList"></div>
-
-          <div class="btn-row">
-            <button class="btn btn-ghost" onclick="goList()">상품 보러가기</button>
-            <button class="btn btn-danger" onclick="clearOrders()">주문 내역 삭제</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div class="fixed-buy" id="fixedBuy">
-    <div class="fixed-inner">
-      <div class="fixed-price">
-        <small>총 결제 예정 금액</small>
-        <span id="fixedTotal">0원</span>
-      </div>
-      <button class="btn btn-primary" onclick="goOrderForm()">주문하기</button>
+    <div class="nav-actions" id="navActions">
+      <button class="btn btn-ghost desktop-only" type="button" data-open-login>Log in</button>
+      <button class="btn btn-primary" type="button" data-open-signup>Get Started</button>
+      <button class="mobile-toggle" type="button" id="mobileToggle" aria-label="Open mobile menu">☰</button>
     </div>
   </div>
+</header>
 
-  <script>
-    const STORAGE_KEY = "senior_groupbuy_real_seed_orders_v1";
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#how">How it works</a>
+  <a href="#services">Services</a>
+  <a href="#pricing">Pricing</a>
+  <button type="button" data-open-mypage>My Page</button>
+  <a href="#faq">FAQ</a>
+  <button type="button" data-open-login>Log in</button>
+  <button type="button" data-open-signup>Get Started</button>
+</div>
 
-    const categories = ["전체", "과일", "건강식품", "건강간식", "간편식", "생활용품", "선물세트"];
+<main id="top">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">✦ For travelers, expats and busy people in Korea</div>
+        <h1>Need to call in Korea? <span class="gradient-text">Kall handles it for you.</span></h1>
+        <p class="hero-copy">From restaurant reservations to clinic appointments, delivery issues, local services and ticket inquiries — our bilingual assistants make Korean calls on your behalf.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="button" data-open-signup>Start with Deposit</button>
+          <a class="btn btn-ghost" href="#how">View How It Works</a>
+        </div>
+        <div class="mini-proof">
+          <span>✓ No monthly fee</span>
+          <span>✓ Refundable balance</span>
+          <span>✓ Transparent request history</span>
+        </div>
+      </div>
 
-    const products = [
-      {
-        id:"fruit_001",
-        category:"과일",
-        name:"[두레] 제주 타이백 감귤 5kg",
-        brand:"두레",
-        description:"새콤달콤한 제주 감귤 대용량 산지 직송 구성",
-        price:25260,
-        originalPrice:26900,
-        emoji:"🍊",
-        visual:"linear-gradient(135deg,#fff4d8,#ffb84d)",
-        rating:"4.7",
-        stock:24,
-        shipping:"무료배송 또는 판매처 정책에 따름",
-        deadline:"오늘 밤 11:59",
-        sourceName:"SSG 이마트몰 참고",
-        sourceUrl:"https://emart.ssg.com/disp/category.ssg?dispCtgId=6000092936",
-        curatorName:"김영희",
-        curatorId:"curator_001",
-        curatorLine:"부모님 간식으로 두기 좋은 과일이에요.",
-        curatorDesc:"귤은 별도 조리 없이 바로 먹기 좋아 시니어 고객 반응이 좋습니다. 가족 간식이나 사무실 간식으로도 부담 없는 구성입니다.",
-        commissionRate:0.08,
-        features:["제주 감귤 5kg 구성","간식/선물 모두 적합","공동구매 체감가 강조 가능"],
-        detailTexts:["상큼한 맛과 적당한 단맛을 기대할 수 있는 감귤 상품군입니다.","대용량 5kg 구성이라 가족 단위 구매에 적합합니다.","신선식품 특성상 수확 시기와 판매처에 따라 크기와 당도는 달라질 수 있습니다."]
-      },
-      {
-        id:"fruit_002",
-        category:"과일",
-        name:"제주 달콤 노지감귤 5kg",
-        brand:"제주푸드마씸",
-        description:"겨울철 대표 과일, 실속형 노지감귤 박스",
-        price:19900,
-        originalPrice:23900,
-        emoji:"🍊",
-        visual:"linear-gradient(135deg,#fff2c7,#ff9f43)",
-        rating:"4.6",
-        stock:31,
-        shipping:"산지 직송 순차 배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"SSG 검색 참고",
-        sourceUrl:"https://emart.ssg.com/search.ssg?query=%EA%B0%90%EA%B7%A4",
-        curatorName:"박미자",
-        curatorId:"curator_002",
-        curatorLine:"겨울에 가장 무난하게 추천할 수 있어요.",
-        curatorDesc:"노지감귤은 가격 접근성이 좋아 공동구매 테스트 상품으로 적합합니다. 재구매 유도에도 유리한 상품군입니다.",
-        commissionRate:0.08,
-        features:["가성비 과일 상품","가정용 박스 구성","시즌 공동구매 적합"],
-        detailTexts:["제주 감귤 상품군은 계절 수요가 강해 메인 진열용으로 좋습니다.","부모님댁, 사무실, 모임 간식으로 활용도가 높습니다.","공동구매 마감일을 짧게 잡으면 구매 전환을 높이기 좋습니다."]
-      },
-      {
-        id:"fruit_003",
-        category:"과일",
-        name:"현가원 서귀포 못난이 천혜향 5kg",
-        brand:"현가원",
-        description:"외관보다 맛을 중시한 실속형 천혜향",
-        price:30520,
-        originalPrice:34900,
-        emoji:"🍊",
-        visual:"linear-gradient(135deg,#fff1d0,#ffc36b)",
-        rating:"4.5",
-        stock:18,
-        shipping:"산지 직송 순차 배송",
-        deadline:"금요일 오후 5:00",
-        sourceName:"SSG 검색 참고",
-        sourceUrl:"https://emart.ssg.com/search.ssg?query=%EA%B0%90%EA%B7%A4",
-        curatorName:"이정숙",
-        curatorId:"curator_003",
-        curatorLine:"겉모양보다 실속을 보는 분께 좋아요.",
-        curatorDesc:"못난이 과일은 공동구매에서 가격 설득이 쉽습니다. 실속 구매를 선호하는 고객에게 추천하기 좋습니다.",
-        commissionRate:0.08,
-        features:["실속형 과일","천혜향 5kg 구성","선물보다 가정용 추천"],
-        detailTexts:["외관이 균일하지 않을 수 있으나 실속형 구매 니즈에 적합합니다.","일반 감귤보다 선물 느낌을 더 줄 수 있는 상품군입니다.","상세페이지에서는 당도, 산지, 중량 정보를 강조하는 것이 좋습니다."]
-      },
-      {
-        id:"fruit_004",
-        category:"과일",
-        name:"산지직송 제주 제철 가정용 감귤 3kg",
-        brand:"재일영농",
-        description:"부담 없이 주문하기 좋은 3kg 가정용 감귤",
-        price:19900,
-        originalPrice:22900,
-        emoji:"🍊",
-        visual:"linear-gradient(135deg,#fff7e6,#ffa94d)",
-        rating:"4.6",
-        stock:40,
-        shipping:"산지 직송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"SSG 검색 참고",
-        sourceUrl:"https://emart.ssg.com/search.ssg?query=%EB%85%B8%EC%A7%80%EA%B0%90%EA%B7%A4",
-        curatorName:"최순자",
-        curatorId:"curator_004",
-        curatorLine:"1~2인 가구에도 부담 없는 양이에요.",
-        curatorDesc:"3kg 구성은 첫 구매 진입장벽이 낮습니다. 공동구매 초반 테스트 상품으로 적절합니다.",
-        commissionRate:0.08,
-        features:["3kg 소용량 구성","첫 구매 적합","간식용 추천"],
-        detailTexts:["5kg이 부담스러운 고객에게 적합한 3kg 구성입니다.","가격대가 낮아 모바일 즉시 구매 전환을 기대할 수 있습니다.","보관 기간을 고려해 빠른 소비를 안내하는 것이 좋습니다."]
-      },
-      {
-        id:"fruit_005",
-        category:"과일",
-        name:"해남 햇 꿀밤 고구마 3kg",
-        brand:"농부곳간",
-        description:"에어프라이어에 구우면 달콤한 고구마",
-        price:15900,
-        originalPrice:19900,
-        emoji:"🍠",
-        visual:"linear-gradient(135deg,#fff0e8,#c9855f)",
-        rating:"4.4",
-        stock:34,
-        shipping:"무료배송 또는 판매처 정책에 따름",
-        deadline:"내일 오후 6:00",
-        sourceName:"SSG 검색 참고",
-        sourceUrl:"https://emart.ssg.com/search.ssg?query=%ED%98%B8%EB%B0%95%EA%B3%A0%EA%B5%AC%EB%A7%883kg",
-        curatorName:"박미자",
-        curatorId:"curator_002",
-        curatorLine:"아침 식사 대용으로 추천해요.",
-        curatorDesc:"고구마는 건강간식과 식사대용 사이에 위치해 시니어 고객에게 설명하기 쉽습니다. 에어프라이어 조리 문구를 강조하면 좋습니다.",
-        commissionRate:0.08,
-        features:["햇고구마 3kg","식사대용 가능","에어프라이어 조리 추천"],
-        detailTexts:["고구마는 아침 대용, 간식, 다이어트 식단으로 활용 가능합니다.","크기와 당도는 수확 시기와 판매처에 따라 달라질 수 있습니다.","보관 시 통풍이 잘 되는 곳에 두는 안내가 필요합니다."]
-      },
+      <div class="hero-panel">
+        <div class="phone-shell">
+          <div class="phone-screen">
+            <div class="phone-top">
+              <div class="phone-title">
+                <strong>My Kall</strong>
+                <span>Today’s request dashboard</span>
+              </div>
+              <div class="avatar">A</div>
+            </div>
 
-      {
-        id:"health_001",
-        category:"건강식품",
-        name:"매일유업 매일두유 검은콩 저당 190ml 24팩",
-        brand:"매일유업",
-        description:"당 부담을 줄인 고소한 검은콩 두유",
-        price:15700,
-        originalPrice:19900,
-        emoji:"🥛",
-        visual:"linear-gradient(135deg,#f3f8ff,#b6d7ff)",
-        rating:"4.7",
-        stock:27,
-        shipping:"택배 배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=13143902",
-        curatorName:"이정숙",
-        curatorId:"curator_003",
-        curatorLine:"당 부담이 걱정되는 분께 좋아요.",
-        curatorDesc:"두유 24팩은 보관이 쉽고 반복 구매가 일어나기 좋은 상품입니다. 저당 키워드가 있어 건강식품 카테고리에서 설득력이 있습니다.",
-        commissionRate:0.1,
-        features:["저당 두유","190ml 24팩","간식/식사대용"],
-        detailTexts:["당 부담을 줄인 두유 상품군입니다.","팩 단위라 보관과 섭취가 편리합니다.","운동 후, 간식, 아침 대용으로 활용하기 좋습니다."]
-      },
-      {
-        id:"health_002",
-        category:"건강식품",
-        name:"매일유업 매일두유 고단백 190ml 24팩",
-        brand:"매일유업",
-        description:"단백질 보충을 위한 고단백 두유",
-        price:18360,
-        originalPrice:22900,
-        emoji:"🥛",
-        visual:"linear-gradient(135deg,#eef6ff,#8fc5ff)",
-        rating:"4.7",
-        stock:21,
-        shipping:"택배 배송",
-        deadline:"금요일 오후 5:00",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=14268572",
-        curatorName:"김영희",
-        curatorId:"curator_001",
-        curatorLine:"운동 후나 아침 대용으로 좋아요.",
-        curatorDesc:"고단백 두유는 건강 관리에 관심 있는 고객에게 추천하기 쉽습니다. 시니어뿐 아니라 가족 단위 구매에도 적합합니다.",
-        commissionRate:0.1,
-        features:["고단백 구성","24팩 대용량","아침 대용 추천"],
-        detailTexts:["단백질 섭취를 고려하는 고객에게 적합한 상품군입니다.","상온 보관 가능한 팩 상품은 공동구매 운영 부담이 낮습니다.","정기 구매로 확장하기 좋은 카테고리입니다."]
-      },
-      {
-        id:"health_003",
-        category:"건강식품",
-        name:"정식품 베지밀 고단백두유 시니어 190ml 24팩",
-        brand:"정식품",
-        description:"시니어 고객에게 설명하기 쉬운 고단백 두유",
-        price:20020,
-        originalPrice:24900,
-        emoji:"🥛",
-        visual:"linear-gradient(135deg,#f8fafc,#cbd5e1)",
-        rating:"4.6",
-        stock:15,
-        shipping:"택배 배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=32457383",
-        curatorName:"최순자",
-        curatorId:"curator_004",
-        curatorLine:"부모님께 보내기 좋은 두유 구성이에요.",
-        curatorDesc:"시니어 키워드가 명확해 서비스 컨셉과 잘 맞습니다. 선물성 주문과 반복 주문 모두 기대할 수 있습니다.",
-        commissionRate:0.1,
-        features:["시니어 타깃","고단백 두유","24팩 구성"],
-        detailTexts:["시니어 고객에게 추천하기 쉬운 두유 상품군입니다.","부모님댁 정기 배송 상품으로 확장할 수 있습니다.","상세페이지에서는 단백질, 칼슘, 당류 등 영양 포인트를 강조하면 좋습니다."]
-      },
-      {
-        id:"health_004",
-        category:"건강식품",
-        name:"혈당 관리 잡곡 혼합 세트",
-        brand:"건강곡물",
-        description:"백미에 섞어 먹기 좋은 잡곡 구성",
-        price:34900,
-        originalPrice:39900,
-        emoji:"🌾",
-        visual:"linear-gradient(135deg,#f8fff1,#b8df8e)",
-        rating:"4.5",
-        stock:22,
-        shipping:"무료배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"김영희",
-        curatorId:"curator_001",
-        curatorLine:"식단 관리하시는 분께 추천해요.",
-        curatorDesc:"잡곡 세트는 시니어 공동구매에서 설명하기 쉬운 상품입니다. 백미에 섞는 방식이라 사용법이 직관적입니다.",
-        commissionRate:0.09,
-        features:["잡곡 혼합 구성","식단관리 추천","가정용 실속 상품"],
-        detailTexts:["백미에 섞어 먹기 좋은 잡곡 세트입니다.","건강식품 카테고리의 기본 상품으로 활용하기 좋습니다.","실제 운영 시 원산지와 구성 곡물 표기가 필요합니다."]
-      },
-      {
-        id:"health_005",
-        category:"건강식품",
-        name:"부모님 건강 차 선물세트",
-        brand:"온가족차",
-        description:"따뜻하게 마시기 좋은 건강 차 구성",
-        price:27900,
-        originalPrice:32900,
-        emoji:"🍵",
-        visual:"linear-gradient(135deg,#effaf3,#9bd9b0)",
-        rating:"4.6",
-        stock:35,
-        shipping:"무료배송",
-        deadline:"금요일 오후 5:00",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"박미자",
-        curatorId:"curator_002",
-        curatorLine:"가볍게 선물하기 좋아요.",
-        curatorDesc:"건강 차 세트는 가격대가 낮아 부담 없는 선물용으로 적합합니다. 명절, 생신, 감사 선물 카피와 잘 맞습니다.",
-        commissionRate:0.09,
-        features:["건강 차 구성","가벼운 선물","따뜻한 음용 상품"],
-        detailTexts:["따뜻한 차를 선호하는 고객에게 추천하기 좋은 구성입니다.","선물세트와 건강식품 카테고리 양쪽에 활용 가능합니다.","상세페이지에서는 구성품, 원재료, 음용 방법을 명확히 표기하면 좋습니다."]
-      },
+            <div class="balance-card">
+              <small>Current Deposit Balance</small>
+              <h3 id="heroBalance">₩82,500</h3>
+            </div>
 
-      {
-        id:"snack_001",
-        category:"건강간식",
-        name:"해남 해풍고구마 밤고구마 3kg",
-        brand:"해남농가",
-        description:"구워 먹기 좋은 달콤한 밤고구마",
-        price:14900,
-        originalPrice:18900,
-        emoji:"🍠",
-        visual:"linear-gradient(135deg,#fff0e8,#bc7a57)",
-        rating:"4.5",
-        stock:33,
-        shipping:"산지 직송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"SSG 검색 참고",
-        sourceUrl:"https://emart.ssg.com/search.ssg?query=%EC%9C%A0%EA%B8%B0%EB%86%8D%EA%B3%A0%EA%B5%AC%EB%A7%88",
-        curatorName:"이정숙",
-        curatorId:"curator_003",
-        curatorLine:"속 편한 간식으로 추천해요.",
-        curatorDesc:"고구마는 건강간식 대표 상품입니다. 조리법이 쉬워 구매 전환이 높은 편입니다.",
-        commissionRate:0.08,
-        features:["밤고구마 3kg","건강간식 추천","구이용 적합"],
-        detailTexts:["에어프라이어나 오븐에 구워 간편하게 먹기 좋습니다.","시니어 고객에게 설명하기 쉬운 건강간식 상품군입니다.","신선식품 특성상 크기와 수분감은 달라질 수 있습니다."]
-      },
-      {
-        id:"snack_002",
-        category:"건강간식",
-        name:"무농약 현미 누룽지 세트",
-        brand:"현미마을",
-        description:"구수하고 속 편한 아침 간식",
-        price:24900,
-        originalPrice:29900,
-        emoji:"🍘",
-        visual:"linear-gradient(135deg,#fffbea,#e5d19a)",
-        rating:"4.6",
-        stock:28,
-        shipping:"무료배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"최순자",
-        curatorId:"curator_004",
-        curatorLine:"아침에 따뜻하게 드시기 좋아요.",
-        curatorDesc:"누룽지는 설명이 쉽고 연령대가 높은 고객에게 익숙한 상품입니다. 재구매형 건강간식으로 적합합니다.",
-        commissionRate:0.08,
-        features:["현미 누룽지","아침 대용","속 편한 간식"],
-        detailTexts:["뜨거운 물에 불려 간편하게 먹을 수 있습니다.","아침 식사가 부담스러운 분께 추천하기 좋습니다.","실제 운영 시 원재료와 중량 표기가 필요합니다."]
-      },
-      {
-        id:"snack_003",
-        category:"건강간식",
-        name:"오트밀 견과 에너지바 20개입",
-        brand:"든든바",
-        description:"외출 시 챙기기 좋은 간편 건강간식",
-        price:21900,
-        originalPrice:26900,
-        emoji:"🥜",
-        visual:"linear-gradient(135deg,#fff7ed,#d6a46a)",
-        rating:"4.4",
-        stock:30,
-        shipping:"택배 배송",
-        deadline:"금요일 오후 5:00",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"김영희",
-        curatorId:"curator_001",
-        curatorLine:"가방에 넣고 다니기 좋은 간식이에요.",
-        curatorDesc:"개별 포장 간식은 공동구매에서 선물/비축용으로 설명하기 쉽습니다. 등산, 산책, 병원 방문 시 간식으로 카피를 잡을 수 있습니다.",
-        commissionRate:0.09,
-        features:["개별 포장","견과 함유","외출용 간식"],
-        detailTexts:["간편하게 휴대하기 좋은 에너지바 구성입니다.","간식, 비상식량, 운동 후 간식으로 활용 가능합니다.","알레르기 성분 표기가 필요한 상품군입니다."]
-      },
-      {
-        id:"snack_004",
-        category:"건강간식",
-        name:"저당 곤약젤리 혼합 30개입",
-        brand:"라이트젤리",
-        description:"부담 없이 먹기 좋은 저당 간식",
-        price:18900,
-        originalPrice:23900,
-        emoji:"🍇",
-        visual:"linear-gradient(135deg,#f5f3ff,#c4b5fd)",
-        rating:"4.5",
-        stock:26,
-        shipping:"택배 배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"박미자",
-        curatorId:"curator_002",
-        curatorLine:"단 간식이 부담스러운 분께 좋아요.",
-        curatorDesc:"저당 간식은 건강 관심 고객에게 반응이 좋습니다. 단맛 욕구를 줄이는 간식으로 포지셔닝할 수 있습니다.",
-        commissionRate:0.09,
-        features:["저당 콘셉트","30개입 대용량","간편 섭취"],
-        detailTexts:["저당 콘셉트의 곤약젤리 상품군입니다.","개별 포장이라 보관과 휴대가 편리합니다.","섭취 전 성분표와 알레르기 정보를 확인하도록 안내해야 합니다."]
-      },
-      {
-        id:"snack_005",
-        category:"건강간식",
-        name:"국산 볶음 아몬드 1kg",
-        brand:"견과곳간",
-        description:"고소하게 즐기는 대용량 견과 간식",
-        price:25900,
-        originalPrice:30900,
-        emoji:"🌰",
-        visual:"linear-gradient(135deg,#fff7ed,#b7794c)",
-        rating:"4.7",
-        stock:19,
-        shipping:"택배 배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"이정숙",
-        curatorId:"curator_003",
-        curatorLine:"커피나 차와 같이 먹기 좋아요.",
-        curatorDesc:"견과류는 건강간식 카테고리에서 기본적인 수요가 있습니다. 대용량 구성은 가격 메리트를 강조하기 좋습니다.",
-        commissionRate:0.09,
-        features:["대용량 1kg","견과 간식","차/커피 곁들임 추천"],
-        detailTexts:["간단하게 집어 먹기 좋은 견과류 간식입니다.","대용량이라 가족 단위 구매에 적합합니다.","견과 알레르기 안내가 필요한 상품군입니다."]
-      },
+            <div class="request-card">
+              <div class="request-head">
+                <strong>Request #1042</strong>
+                <span class="badge progress">In Progress</span>
+              </div>
+              <div class="request-meta">
+                <span>Task: Call restaurant for dinner reservation</span>
+                <span>Language: English → Korean</span>
+                <span>Deposit Used: ₩3,500</span>
+                <span>Remaining Balance: ₩46,500</span>
+              </div>
+            </div>
 
-      {
-        id:"meal_001",
-        category:"간편식",
-        name:"CJ제일제당 비비고 삼계탕 800g",
-        brand:"비비고",
-        description:"데우기만 하면 되는 든든한 보양식",
-        price:9790,
-        originalPrice:12900,
-        emoji:"🍲",
-        visual:"linear-gradient(135deg,#fff7ed,#ffc48d)",
-        rating:"4.6",
-        stock:25,
-        shipping:"택배 배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"다나와/CJ더마켓 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=4779374",
-        curatorName:"박미자",
-        curatorId:"curator_002",
-        curatorLine:"혼자 사시는 부모님께 좋아요.",
-        curatorDesc:"삼계탕은 보양식 이미지가 강해 시니어 공동구매에 잘 맞습니다. 간편 조리 상품이라 구매 후 만족도 설명이 쉽습니다.",
-        commissionRate:0.1,
-        features:["간편 보양식","800g 1팩","실온/냉장 정책 확인 필요"],
-        detailTexts:["가정에서 간편하게 데워 먹을 수 있는 삼계탕 상품군입니다.","부모님댁 비상식으로 보내기 좋은 상품입니다.","실제 운영 시 보관 방식과 유통기한 정보를 명확히 표시해야 합니다."]
-      },
-      {
-        id:"meal_002",
-        category:"간편식",
-        name:"오뚜기 옛날 삼계탕 900g",
-        brand:"오뚜기",
-        description:"1인분으로 든든한 실온 보관 삼계탕",
-        price:9900,
-        originalPrice:12900,
-        emoji:"🍲",
-        visual:"linear-gradient(135deg,#fff1e6,#ffb86b)",
-        rating:"4.5",
-        stock:22,
-        shipping:"택배 배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=6309076",
-        curatorName:"김영희",
-        curatorId:"curator_001",
-        curatorLine:"식사 챙기기 힘든 날에 좋아요.",
-        curatorDesc:"오뚜기 삼계탕은 브랜드 인지도가 있어 신뢰감을 주기 좋습니다. 공동구매 카드에서 브랜드를 크게 보여주면 전환에 유리합니다.",
-        commissionRate:0.1,
-        features:["900g 구성","1인분 보양식","브랜드 인지도"],
-        detailTexts:["간편하게 데워 먹는 보양식 상품군입니다.","시니어 고객에게 익숙한 브랜드 상품은 신뢰감을 줄 수 있습니다.","실제 가격은 판매처와 배송비에 따라 달라질 수 있습니다."]
-      },
-      {
-        id:"meal_003",
-        category:"간편식",
-        name:"풀무원 얇은피 꽉찬속 김치만두 1.2kg",
-        brand:"풀무원",
-        description:"간식과 식사 모두 가능한 냉동 김치만두",
-        price:12380,
-        originalPrice:15900,
-        emoji:"🥟",
-        visual:"linear-gradient(135deg,#fff1f2,#fda4af)",
-        rating:"5.0",
-        stock:32,
-        shipping:"냉동 배송",
-        deadline:"금요일 오후 5:00",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=8663108",
-        curatorName:"최순자",
-        curatorId:"curator_004",
-        curatorLine:"간단히 한 끼 해결하기 좋아요.",
-        curatorDesc:"냉동만두는 반복 구매가 가능한 간편식입니다. 가족 단위 고객에게도 무난하게 추천할 수 있습니다.",
-        commissionRate:0.1,
-        features:["냉동 만두","1.2kg 구성","간식/식사 겸용"],
-        detailTexts:["찜, 군만두, 만둣국 등으로 활용 가능한 냉동 간편식입니다.","냉동 배송 상품은 수령 후 즉시 보관 안내가 필요합니다.","가족 단위 공동구매에 적합한 상품군입니다."]
-      },
-      {
-        id:"meal_004",
-        category:"간편식",
-        name:"풀무원 얇은피 꽉찬속 고기만두 1.32kg",
-        brand:"풀무원",
-        description:"얇은피와 고기소가 특징인 냉동 고기만두",
-        price:14160,
-        originalPrice:17900,
-        emoji:"🥟",
-        visual:"linear-gradient(135deg,#fff7ed,#fdba74)",
-        rating:"4.8",
-        stock:29,
-        shipping:"냉동 배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=10889580",
-        curatorName:"이정숙",
-        curatorId:"curator_003",
-        curatorLine:"냉동실에 두면 든든해요.",
-        curatorDesc:"냉동실 비축용 간편식으로 설명하기 좋습니다. 만두 상품은 카테고리 확장성이 높습니다.",
-        commissionRate:0.1,
-        features:["고기만두","1.32kg 구성","냉동실 비축용"],
-        detailTexts:["간편하게 조리할 수 있는 냉동 고기만두 상품군입니다.","식사 대용과 간식용 모두 활용 가능합니다.","배송 시 냉동 상태 유지 안내가 필요합니다."]
-      },
-      {
-        id:"meal_005",
-        category:"간편식",
-        name:"햇반 전복내장죽 420g",
-        brand:"CJ제일제당",
-        description:"부드럽게 먹기 좋은 간편 죽 상품",
-        price:3900,
-        originalPrice:4900,
-        emoji:"🥣",
-        visual:"linear-gradient(135deg,#f8fafc,#d9e2ec)",
-        rating:"4.6",
-        stock:45,
-        shipping:"상온 배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"CJ더마켓 참고",
-        sourceUrl:"https://www.cjthemarket.com/the/product/product-main?prdCd=40156318",
-        curatorName:"박미자",
-        curatorId:"curator_002",
-        curatorLine:"속이 편한 한 끼로 좋아요.",
-        curatorDesc:"죽 상품은 시니어 고객에게 설명이 쉽고 객단가를 낮춰 첫 구매를 유도하기 좋습니다. 묶음 판매로 확장할 수 있습니다.",
-        commissionRate:0.1,
-        features:["간편 죽","420g 구성","부드러운 식사"],
-        detailTexts:["전자레인지로 간편 조리 가능한 죽 상품군입니다.","아침 식사나 속이 불편한 날의 한 끼로 적합합니다.","묶음 구성으로 판매하면 객단가를 높일 수 있습니다."]
-      },
+            <div class="request-card">
+              <div class="request-head">
+                <strong>Clinic appointment</strong>
+                <span class="badge confirmed">Confirmed</span>
+              </div>
+              <div class="request-meta">
+                <span>Gangnam Skin Clinic</span>
+                <span>Friday · 14:30 · Assistant note saved</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      {
-        id:"life_001",
-        category:"생활용품",
-        name:"크리넥스 데코 앤 소프트 30m 30롤",
-        brand:"크리넥스",
-        description:"가정에서 자주 쓰는 3겹 롤화장지",
-        price:23060,
-        originalPrice:27900,
-        emoji:"🧻",
-        visual:"linear-gradient(135deg,#f8fafc,#cbd5e1)",
-        rating:"4.7",
-        stock:38,
-        shipping:"택배 배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=13240853",
-        curatorName:"김영희",
-        curatorId:"curator_001",
-        curatorLine:"생활필수품이라 실패가 적어요.",
-        curatorDesc:"화장지는 공동구매에서 가격 비교가 쉬운 생활필수품입니다. 대량 구매 수요가 있어 묶음 할인 구성이 좋습니다.",
-        commissionRate:0.07,
-        features:["생활필수품","30롤 구성","대량구매 적합"],
-        detailTexts:["가정에서 자주 사용하는 롤화장지 상품군입니다.","가격 비교가 쉬워 공동구매 특가를 강조하기 좋습니다.","부피가 큰 상품이므로 배송비 정책 확인이 필요합니다."]
-      },
-      {
-        id:"life_002",
-        category:"생활용품",
-        name:"크리넥스 울트라 클린 27m 30롤 2팩",
-        brand:"크리넥스",
-        description:"넉넉하게 쟁여두기 좋은 화장지 2팩 구성",
-        price:34080,
-        originalPrice:39900,
-        emoji:"🧻",
-        visual:"linear-gradient(135deg,#eff6ff,#bfdbfe)",
-        rating:"4.7",
-        stock:24,
-        shipping:"택배 배송",
-        deadline:"금요일 오후 5:00",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=12872402",
-        curatorName:"최순자",
-        curatorId:"curator_004",
-        curatorLine:"쟁여두기 좋은 실속 구성입니다.",
-        curatorDesc:"2팩 구성은 공동구매 혜택을 크게 느끼게 만들 수 있습니다. 생활용품 카테고리의 대표 상품으로 적합합니다.",
-        commissionRate:0.07,
-        features:["30롤 2팩","가정용 비축","실속 구성"],
-        detailTexts:["대량 비축용으로 적합한 화장지 상품군입니다.","가족 단위 고객에게 추천하기 좋습니다.","보관 공간이 필요한 상품임을 안내하면 좋습니다."]
-      },
-      {
-        id:"life_003",
-        category:"생활용품",
-        name:"유한킴벌리 크린가드 소프트 크린 KF-AD 50매",
-        brand:"유한킴벌리",
-        description:"일상 외출용으로 쓰기 좋은 마스크 50매",
-        price:6340,
-        originalPrice:9900,
-        emoji:"😷",
-        visual:"linear-gradient(135deg,#f1f5f9,#94a3b8)",
-        rating:"4.6",
-        stock:50,
-        shipping:"택배 배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=12033926",
-        curatorName:"이정숙",
-        curatorId:"curator_003",
-        curatorLine:"집에 두고 쓰기 좋은 기본 생활용품이에요.",
-        curatorDesc:"마스크는 단가가 낮아 추가 구매 상품으로 적합합니다. 다른 생활용품과 묶음 구성으로 운영하기 좋습니다.",
-        commissionRate:0.07,
-        features:["50매 구성","일상 외출용","낮은 진입가격"],
-        detailTexts:["일상 외출용으로 사용할 수 있는 마스크 상품군입니다.","낮은 가격대라 장바구니 추가 상품으로 적합합니다.","규격과 인증 정보는 실제 상품 페이지 기준으로 확인해야 합니다."]
-      },
-      {
-        id:"life_004",
-        category:"생활용품",
-        name:"테팔 스타트이지 IH 프라이팬 28cm",
-        brand:"테팔",
-        description:"인덕션 사용 가능한 28cm 프라이팬",
-        price:29940,
-        originalPrice:40820,
-        emoji:"🍳",
-        visual:"linear-gradient(135deg,#f8fafc,#9ca3af)",
-        rating:"4.7",
-        stock:17,
-        shipping:"택배 배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=13274987",
-        curatorName:"박미자",
-        curatorId:"curator_002",
-        curatorLine:"주방용품 교체 시기에 추천해요.",
-        curatorDesc:"프라이팬은 브랜드 인지도가 높고 선물성도 있습니다. 주방용품 공동구매 카테고리 확장에 적합합니다.",
-        commissionRate:0.08,
-        features:["28cm 프라이팬","IH 인덕션 가능","브랜드 주방용품"],
-        detailTexts:["가정에서 사용 빈도가 높은 프라이팬 상품군입니다.","브랜드 신뢰도가 있어 공동구매 전환에 유리합니다.","사이즈와 인덕션 사용 가능 여부를 명확히 표기해야 합니다."]
-      },
-      {
-        id:"life_005",
-        category:"생활용품",
-        name:"락앤락 유로 오븐글라스 밀폐용기 16종 세트",
-        brand:"락앤락",
-        description:"반찬 보관에 좋은 유리 밀폐용기 세트",
-        price:39900,
-        originalPrice:49900,
-        emoji:"🥡",
-        visual:"linear-gradient(135deg,#ecfeff,#67e8f9)",
-        rating:"4.5",
-        stock:20,
-        shipping:"택배 배송",
-        deadline:"금요일 오후 5:00",
-        sourceName:"다나와 참고",
-        sourceUrl:"https://prod.danawa.com/info/?pcode=71191286",
-        curatorName:"김영희",
-        curatorId:"curator_001",
-        curatorLine:"반찬 정리용으로 실용적이에요.",
-        curatorDesc:"밀폐용기 세트는 주부 고객과 시니어 가정 모두에게 실용적입니다. 세트 구성이어서 선물성도 있습니다.",
-        commissionRate:0.08,
-        features:["16종 세트","유리 밀폐용기","반찬 보관용"],
-        detailTexts:["반찬, 식재료 보관에 활용하기 좋은 밀폐용기 상품군입니다.","세트 구성이라 공동구매 특가 느낌을 주기 좋습니다.","실제 운영 시 구성품 사이즈와 재질을 정확히 표기해야 합니다."]
-      },
+        <div class="hero-floating">
+          <strong>Reservation details saved</strong>
+          <p>Names, dates, places, phone numbers and assistant notes stay visible in My Page.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <section class="section" aria-label="Trust badges">
+    <div class="container trust-grid">
+      <div class="trust-item"><b>KR</b><span>Korean-speaking assistants</span></div>
+      <div class="trust-item"><b>100%</b><span>Visible request history</span></div>
+      <div class="trust-item"><b>₩</b><span>Balance tracking</span></div>
+      <div class="trust-item"><b>50+</b><span>Common task types</span></div>
+      <div class="trust-item"><b>Chat</b><span>Kakao / WhatsApp friendly</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="container">
+      <div class="section-head center">
+        <div class="section-kicker">How it works</div>
+        <h2>Deposit once. Request anytime. Track every detail.</h2>
+        <p>Kall turns stressful Korean phone calls into a simple request workflow.</p>
+      </div>
+
+      <div class="grid-4">
+        <article class="card">
+          <div class="step-num">1</div>
+          <h3>Create your account</h3>
+          <p>Sign up with your email and set your preferred language for request updates.</p>
+        </article>
+        <article class="card">
+          <div class="step-num">2</div>
+          <h3>Add deposit</h3>
+          <p>Add prepaid balance. Unused balance can be marked as refundable in your account.</p>
+        </article>
+        <article class="card">
+          <div class="step-num">3</div>
+          <h3>Submit a request</h3>
+          <p>Send the place, phone number, date, and exact message you want handled.</p>
+        </article>
+        <article class="card">
+          <div class="step-num">4</div>
+          <h3>Track everything</h3>
+          <p>See status, used amount, remaining balance, reservation details and assistant notes.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">Services</div>
+        <h2>Korean calls for daily life, travel and urgent changes.</h2>
+        <p>Select a category and submit a request. This prototype saves your request in My Page.</p>
+      </div>
+
+      <div class="grid-3" id="serviceGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-head center">
+        <div class="section-kicker">Deposit & Pricing</div>
+        <h2>Simple prepaid balance. Clear deduction history.</h2>
+        <p>No real payment is connected in this prototype. Buttons show a payment-ready mock action.</p>
+      </div>
+
+      <div class="grid-3">
+        <article class="card pricing-card">
+          <h3>Starter Deposit</h3>
+          <p>For light requests and quick calls.</p>
+          <div class="price">₩30,000</div>
+          <div class="price-caption">Refundable unused balance</div>
+          <ul>
+            <li>Quick restaurant or shop calls</li>
+            <li>Request history included</li>
+            <li>Basic assistant note</li>
+            <li>Good for first-time users</li>
+          </ul>
+          <button class="btn btn-ghost" type="button" data-payment>Choose Starter</button>
+        </article>
+
+        <article class="card pricing-card featured">
+          <h3>Travel Deposit</h3>
+          <p>Recommended for active travelers in Korea.</p>
+          <div class="price">₩70,000</div>
+          <div class="price-caption">Most recommended</div>
+          <ul>
+            <li>Restaurants, clinics, tickets and travel help</li>
+            <li>Priority request review</li>
+            <li>Detailed reservation record</li>
+            <li>Refundable unused balance</li>
+          </ul>
+          <button class="btn btn-dark" type="button" data-payment>Choose Travel</button>
+        </article>
+
+        <article class="card pricing-card">
+          <h3>Premium Deposit</h3>
+          <p>For longer stays or multiple requests.</p>
+          <div class="price">₩150,000</div>
+          <div class="price-caption">For business trips and expats</div>
+          <ul>
+            <li>Faster handling workflow</li>
+            <li>More detailed follow-up</li>
+            <li>Monthly request summary</li>
+            <li>Refundable unused balance</li>
+          </ul>
+          <button class="btn btn-ghost" type="button" data-payment>Choose Premium</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container demo-wrap">
+      <div class="card">
+        <div class="section-kicker">Request Preview</div>
+        <h2 style="font-size: 34px;">A request should feel simple.</h2>
+        <div class="form-preview">
+          <div class="preview-field"><span>Request type</span><b>Restaurant Reservation</b></div>
+          <div class="preview-field"><span>Place name</span><b>Myeongdong K-BBQ</b></div>
+          <div class="preview-field"><span>Preferred date</span><b>2026-06-12</b></div>
+          <div class="preview-field"><span>Party size</span><b>4 people</b></div>
+          <div class="preview-field"><span>Notes</span><b>Window seat, no pork if possible</b></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-kicker">Live timeline</div>
+        <h2 style="font-size: 34px;">From request to confirmed details.</h2>
+        <div class="timeline">
+          <div class="timeline-item done">
+            <div class="timeline-dot">✓</div>
+            <div class="timeline-content"><strong>Request received</strong><span>Your request is saved and ready for review.</span></div>
+          </div>
+          <div class="timeline-item done">
+            <div class="timeline-dot">✓</div>
+            <div class="timeline-content"><strong>Assistant reviewing details</strong><span>Missing details are checked before calling.</span></div>
+          </div>
+          <div class="timeline-item active">
+            <div class="timeline-dot">3</div>
+            <div class="timeline-content"><strong>Korean call in progress</strong><span>An assistant is contacting the business in Korean.</span></div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">4</div>
+            <div class="timeline-content"><strong>Reservation confirmed</strong><span>Confirmation details will be saved.</span></div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">5</div>
+            <div class="timeline-content"><strong>Details saved to My Page</strong><span>Review place, time, phone, memo and used deposit.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="mypagePreview">
+    <div class="container">
+      <div class="section-head center">
+        <div class="section-kicker">My Page</div>
+        <h2>The strongest difference: visible balance and reservation history.</h2>
+        <p>Users do not just send messages. They manage requests, deposit usage and confirmed reservation details.</p>
+      </div>
+
+      <div class="card mypage-preview">
+        <div class="dash-cards" id="previewDashCards"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Request Summary</th>
+                <th>Status</th>
+                <th>Used Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="previewRequestRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <div class="section-kicker">Testimonials</div>
+        <h2>Made for foreigners who need local calls handled clearly.</h2>
+      </div>
+
+      <div class="grid-4">
+        <article class="card testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“Kall helped me book a clinic appointment in Seoul when I couldn’t explain my symptoms in Korean.”</p>
+          <div class="reviewer"><div class="avatar">E</div><div><strong>Emily R.</strong><span>Traveler</span></div></div>
+        </article>
+        <article class="card testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“I use Kall whenever I need to call local businesses. The deposit tracking makes it easy.”</p>
+          <div class="reviewer"><div class="avatar">J</div><div><strong>Jason L.</strong><span>Expat</span></div></div>
+        </article>
+        <article class="card testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“They confirmed a restaurant reservation and sent me the full address in English.”</p>
+          <div class="reviewer"><div class="avatar">M</div><div><strong>Mei Chen</strong><span>Tourist</span></div></div>
+        </article>
+        <article class="card testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“Perfect for short business trips. I didn’t need to ask my hotel staff for every phone call.”</p>
+          <div class="reviewer"><div class="avatar">D</div><div><strong>Daniel P.</strong><span>Business visitor</span></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head center">
+        <div class="section-kicker">FAQ</div>
+        <h2>Clear answers before users deposit.</h2>
+      </div>
+
+      <div class="faq-list" id="faqList"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="final-cta">
+        <h2>한국에서 전화가 필요한 순간, Kall에 맡기세요.</h2>
+        <p>Restaurants, clinics, tickets, delivery issues and local services — submit your request in English and let Kall handle the Korean call.</p>
+        <div class="hero-actions" style="justify-content:center; margin-bottom:0;">
+          <button class="btn btn-dark" type="button" data-open-signup>Start with Deposit</button>
+          <button class="btn btn-ghost" type="button" data-open-request>Submit Mock Request</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brand" style="margin-bottom: 14px;">
+          <div class="brand-mark">K</div>
+          <div class="brand-title"><strong>Kall</strong><span>Korea Call Assistant</span></div>
+        </div>
+        <p style="max-width: 360px; margin:0; font-weight:750;">Kall helps foreigners in Korea handle calls, reservations and local inquiries without language stress.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="#how">How it works</a>
+        <a href="#services">Services</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <span>KakaoTalk</span>
+        <span>WhatsApp</span>
+        <span>hello@kall.example</span>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <span>Terms</span>
+        <span>Privacy</span>
+        <span>Refund Policy</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Kall. Prototype landing page.</span>
+      <span>No backend, no real payment, mock data only.</span>
+    </div>
+  </div>
+</footer>
+
+  </div>  <div class="modal-backdrop" id="loginModal" data-modal>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <div class="modal-head">
+        <div><h3 id="loginTitle">Log in</h3><p>Mock login. Any non-empty email and password works.</p></div>
+        <button class="close-btn" type="button" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm" class="form-grid">
+          <label class="full">Email<input type="email" id="loginEmail" placeholder="alex@example.com" required /></label>
+          <label class="full">Password<input type="password" id="loginPassword" placeholder="••••••••" required /></label>
+          <div class="modal-actions full">
+            <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+            <button class="btn btn-primary" type="submit">Log in</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>  <div class="modal-backdrop" id="signupModal" data-modal>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+      <div class="modal-head">
+        <div><h3 id="signupTitle">Create account</h3><p>Start with a mock account and refundable deposit dashboard.</p></div>
+        <button class="close-btn" type="button" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <form id="signupForm" class="form-grid">
+          <label>Full Name<input type="text" id="signupName" placeholder="Alex Kim" required /></label>
+          <label>Email<input type="email" id="signupEmail" placeholder="alex@example.com" required /></label>
+          <label>Password<input type="password" id="signupPassword" placeholder="Create password" required /></label>
+          <label>Preferred Language
+            <select id="signupLang">
+              <option>English</option>
+              <option>Chinese</option>
+              <option>Japanese</option>
+              <option>Korean</option>
+            </select>
+          </label>
+          <label class="full">Country / Region<input type="text" id="signupCountry" placeholder="United States" /></label>
+          <div class="modal-actions full">
+            <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+            <button class="btn btn-primary" type="submit">Create Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>  <div class="modal-backdrop" id="requestModal" data-modal>
+    <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="requestTitle">
+      <div class="modal-head">
+        <div><h3 id="requestTitle">Submit a request</h3><p>Tell Kall what Korean call or reservation you need handled.</p></div>
+        <button class="close-btn" type="button" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <form id="requestForm" class="form-grid">
+          <label>Request Category
+            <select id="requestCategory">
+              <option>Restaurant</option>
+              <option>Clinic / Beauty</option>
+              <option>Travel / Tickets</option>
+              <option>Shopping / Delivery</option>
+              <option>Local Life</option>
+              <option>Emergency Support</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>Urgency
+            <select id="requestUrgency">
+              <option>Normal</option>
+              <option>Today</option>
+              <option>Urgent</option>
+            </select>
+          </label>
+          <label class="full">Request Title<input type="text" id="requestSummary" placeholder="Dinner reservation at Itaewon steakhouse" required /></label>
+          <label>Place / Business Name<input type="text" id="requestPlace" placeholder="Itaewon Steakhouse" /></label>
+          <label>Phone Number or Website<input type="text" id="requestPhone" placeholder="02-000-0000 or website URL" /></label>
+          <label>Preferred Date<input type="date" id="requestDate" /></label>
+          <label>Preferred Time<input type="time" id="requestTime" /></label>
+          <label class="full">Location<input type="text" id="requestLocation" placeholder="Gangnam-gu, Seoul" /></label>
+          <label class="full">Detailed Request<textarea id="requestMemo" placeholder="Please call and ask if they have a table for 4 people. Window seat preferred."></textarea></label>
+          <div class="full upload-mock">Reference image upload area<br />Prototype only — real upload will be connected later.</div>
+          <div class="modal-actions full">
+            <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+            <button class="btn btn-primary" type="submit">Submit Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>  <div class="modal-backdrop" id="mypageModal" data-modal>
+    <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="mypageTitle">
+      <div class="modal-head">
+        <div><h3 id="mypageTitle">My Page</h3><p>Deposit balance, usage history and reservation details.</p></div>
+        <button class="close-btn" type="button" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <div class="dash-cards" id="modalDashCards"></div>
+        <div class="modal-actions" style="justify-content:flex-start; margin: 0 0 18px;">
+          <button class="btn btn-primary" type="button" data-payment>Charge Deposit</button>
+          <button class="btn btn-ghost" type="button" id="refundBtn">Request Refund</button>
+          <button class="btn btn-ghost" type="button" data-open-request>New Request</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Request Summary</th>
+                <th>Status</th>
+                <th>Used Amount</th>
+                <th>Reservation Details</th>
+              </tr>
+            </thead>
+            <tbody id="modalRequestRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>  <div class="modal-backdrop" id="detailModal" data-modal>
+    <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <div class="modal-head">
+        <div><h3 id="detailTitle">Reservation Details</h3><p>Assistant note, timeline, deposit and business information.</p></div>
+        <button class="close-btn" type="button" data-close>×</button>
+      </div>
+      <div class="modal-body" id="detailBody"></div>
+    </div>
+  </div>  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>  <script>
+    const STORAGE = {
+      user: 'kall_user',
+      requests: 'kall_requests',
+      balance: 'kall_balance'
+    };
+
+    const DEFAULT_USER = {
+      name: 'Alex Kim',
+      email: 'alex@example.com',
+      preferredLanguage: 'English',
+      country: 'United States'
+    };
+
+    const DEFAULT_BALANCE = 82500;
+
+    const DEFAULT_REQUESTS = [
       {
-        id:"gift_001",
-        category:"선물세트",
-        name:"국산 들기름 선물세트",
-        brand:"고소한집",
-        description:"고소한 향이 진한 집밥용 선물세트",
-        price:38000,
-        originalPrice:45000,
-        emoji:"🫙",
-        visual:"linear-gradient(135deg,#fff8dd,#e9c46a)",
-        rating:"4.6",
-        stock:20,
-        shipping:"무료배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"최순자",
-        curatorId:"curator_004",
-        curatorLine:"집밥 자주 드시는 분께 추천해요.",
-        curatorDesc:"들기름 선물세트는 실용성과 선물성을 함께 갖춘 상품입니다. 부모님댁, 명절, 감사 선물용으로 설명하기 좋습니다.",
-        commissionRate:0.1,
-        features:["국산 들기름","선물 포장 가능","집밥용 추천"],
-        detailTexts:["집밥을 자주 드시는 가정에 실용적인 선물세트입니다.","명절이나 감사 선물용으로 활용하기 좋습니다.","실제 운영 시 원산지와 용량 표시가 필요합니다."]
+        id: '#1042',
+        date: '2026-05-18',
+        category: 'Restaurant',
+        summary: 'Dinner reservation at Itaewon steakhouse',
+        status: 'Confirmed',
+        usedAmount: 4500,
+        place: 'Itaewon Steakhouse',
+        address: 'Itaewon-ro, Yongsan-gu, Seoul',
+        phone: '02-000-0000',
+        reservationDate: '2026-05-22',
+        reservationTime: '19:30',
+        assistantNote: 'Reservation confirmed under the name Alex. Please arrive 10 minutes early. The restaurant requested a phone number for changes.',
+        memo: 'Window seat requested.',
+        timeline: ['Request received', 'Assistant reviewed details', 'Korean call completed', 'Reservation confirmed']
       },
       {
-        id:"gift_002",
-        category:"선물세트",
-        name:"프리미엄 김 선물세트",
-        brand:"바다곳간",
-        description:"바삭하고 고소한 식탁 필수품",
-        price:22900,
-        originalPrice:27900,
-        emoji:"🥢",
-        visual:"linear-gradient(135deg,#eef2f3,#8e9eab)",
-        rating:"4.7",
-        stock:29,
-        shipping:"무료배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"박미자",
-        curatorId:"curator_002",
-        curatorLine:"누구나 좋아하는 실속 선물이에요.",
-        curatorDesc:"김 선물세트는 호불호가 적고 가격 부담이 낮습니다. 대량 선물 수요에도 적합합니다.",
-        commissionRate:0.08,
-        features:["실속 선물세트","식탁 필수품","부담 없는 가격"],
-        detailTexts:["누구나 사용하기 쉬운 식품 선물세트입니다.","가격대가 낮아 여러 개 주문하기 좋습니다.","실제 운영 시 구성 수량과 원산지 표기가 필요합니다."]
+        id: '#1041',
+        date: '2026-05-17',
+        category: 'Clinic / Beauty',
+        summary: 'Dermatology appointment in Gangnam',
+        status: 'In Progress',
+        usedAmount: 2000,
+        place: 'Gangnam Skin Clinic',
+        address: 'Gangnam-daero, Seoul',
+        phone: '02-111-1111',
+        reservationDate: 'Pending',
+        reservationTime: 'Pending',
+        assistantNote: 'Clinic requested preferred treatment details. Waiting for confirmation.',
+        memo: 'Acne treatment consultation.',
+        timeline: ['Request received', 'Assistant reviewing details', 'Korean call in progress']
       },
       {
-        id:"gift_003",
-        category:"선물세트",
-        name:"시니어 관절 건강 간식 세트",
-        brand:"효도간식",
-        description:"부모님 선물용 건강 간식 구성",
-        price:45000,
-        originalPrice:54000,
-        emoji:"🎁",
-        visual:"linear-gradient(135deg,#fff3f5,#ffd1dc)",
-        rating:"4.5",
-        stock:12,
-        shipping:"무료배송",
-        deadline:"금요일 오후 5:00",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"김영희",
-        curatorId:"curator_001",
-        curatorLine:"명절 선물로 반응이 좋아요.",
-        curatorDesc:"시니어 타깃 서비스의 정체성을 가장 잘 보여줄 수 있는 선물세트입니다. 부모님 선물 카피와 궁합이 좋습니다.",
-        commissionRate:0.12,
-        features:["부모님 선물","건강 간식 구성","명절용 추천"],
-        detailTexts:["부모님께 보내기 좋은 건강 간식 세트입니다.","선물용 상세페이지에서는 포장 이미지와 구성품 정보가 중요합니다.","건강 관련 표현은 과장되지 않게 작성해야 합니다."]
+        id: '#1038',
+        date: '2026-05-13',
+        category: 'Travel / Tickets',
+        summary: 'Ferry ticket inquiry to Ulleungdo',
+        status: 'Completed',
+        usedAmount: 8000,
+        place: 'Ferry Ticket Office',
+        address: 'Gangneung Port',
+        phone: '033-000-0000',
+        reservationDate: '2026-06-03',
+        reservationTime: '08:00',
+        assistantNote: 'Ticket availability checked. Morning ferry available.',
+        memo: 'Asked about cancellation policy.',
+        timeline: ['Request received', 'Assistant called office', 'Availability checked', 'Details saved']
       },
       {
-        id:"gift_004",
-        category:"선물세트",
-        name:"부모님 건강 차 선물세트 프리미엄",
-        brand:"온가족차",
-        description:"따뜻한 차를 다양하게 담은 선물 구성",
-        price:32900,
-        originalPrice:39900,
-        emoji:"🍵",
-        visual:"linear-gradient(135deg,#ecfdf5,#86efac)",
-        rating:"4.6",
-        stock:25,
-        shipping:"무료배송",
-        deadline:"오늘 밤 11:59",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"이정숙",
-        curatorId:"curator_003",
-        curatorLine:"가볍지만 정성 있는 선물이에요.",
-        curatorDesc:"건강 차 선물세트는 계절성 이벤트와 잘 맞습니다. 환절기, 명절, 생신 선물 카피로 활용 가능합니다.",
-        commissionRate:0.09,
-        features:["차 선물세트","부담 없는 가격","환절기 추천"],
-        detailTexts:["따뜻하게 마시는 건강 차 구성입니다.","가벼운 선물용으로 적합한 가격대입니다.","실제 운영 시 구성 차 종류와 원재료 표기가 필요합니다."]
-      },
-      {
-        id:"gift_005",
-        category:"선물세트",
-        name:"한우 사골곰탕 선물세트 8팩",
-        brand:"든든한상",
-        description:"간편하게 데워 먹는 보양식 선물세트",
-        price:42900,
-        originalPrice:52900,
-        emoji:"🥣",
-        visual:"linear-gradient(135deg,#fff7ed,#fed7aa)",
-        rating:"4.6",
-        stock:16,
-        shipping:"무료배송",
-        deadline:"내일 오후 6:00",
-        sourceName:"운영자 등록 상품",
-        sourceUrl:"#",
-        curatorName:"최순자",
-        curatorId:"curator_004",
-        curatorLine:"든든한 식사 선물로 좋아요.",
-        curatorDesc:"곰탕 선물세트는 간편식과 선물세트 성격을 동시에 갖고 있습니다. 부모님댁에 보내기 좋은 상품으로 포지셔닝할 수 있습니다.",
-        commissionRate:0.1,
-        features:["곰탕 8팩","보양식 선물","간편 조리"],
-        detailTexts:["데워 먹기 좋은 간편 보양식 선물세트입니다.","혼자 사시는 부모님께 보내기 좋은 구성입니다.","실제 운영 시 보관 방식과 유통기한 안내가 필요합니다."]
+        id: '#1032',
+        date: '2026-05-09',
+        category: 'Shopping / Delivery',
+        summary: 'Delivery issue call',
+        status: 'Completed',
+        usedAmount: 3000,
+        place: 'Local Delivery Center',
+        address: 'Mapo-gu, Seoul',
+        phone: '1588-0000',
+        reservationDate: 'N/A',
+        reservationTime: 'N/A',
+        assistantNote: 'Delivery office confirmed package will be redelivered tomorrow afternoon.',
+        memo: 'User missed first delivery attempt.',
+        timeline: ['Request received', 'Delivery office called', 'Redelivery confirmed']
       }
     ];
 
+    const services = [
+      {
+        icon: '🍽',
+        category: 'Restaurant',
+        title: 'Restaurant Reservations',
+        desc: 'Book tables, confirm waiting, ask for special seats or dietary notes.',
+        items: ['Dinner booking', 'Waiting check', 'Allergy note']
+      },
+      {
+        icon: '🏥',
+        category: 'Clinic / Beauty',
+        title: 'Clinics & Beauty',
+        desc: 'Appointments for clinics, dermatology, salons and treatment inquiries.',
+        items: ['Clinic appointment', 'Treatment price', 'Salon booking']
+      },
+      {
+        icon: '🎟',
+        category: 'Travel / Tickets',
+        title: 'Travel & Tickets',
+        desc: 'Ask about tours, ferries, buses, events, hotels and lost items.',
+        items: ['Ticket inquiry', 'Hotel call', 'Lost item check']
+      },
+      {
+        icon: '📦',
+        category: 'Shopping / Delivery',
+        title: 'Shopping & Delivery',
+        desc: 'Handle order confirmations, delivery issues, refunds and stock calls.',
+        items: ['Delivery issue', 'Refund call', 'Store stock check']
+      },
+      {
+        icon: '🏠',
+        category: 'Local Life',
+        title: 'Local Life',
+        desc: 'Support for repairs, laundry, real estate, schools and public offices.',
+        items: ['Repair booking', 'Laundry inquiry', 'Office call']
+      },
+      {
+        icon: '⚡',
+        category: 'Emergency Support',
+        title: 'Emergency Support',
+        desc: 'Urgent calls for sudden changes, hospitals, pharmacies and cancellations.',
+        items: ['Urgent change', 'Pharmacy check', 'Cancellation call']
+      }
+    ];
+
+    const faqs = [
+      ['Do I need to speak Korean?', 'No. You can submit your request in English or another supported language. Kall assistants handle the Korean call or inquiry for you.'],
+      ['How does the deposit work?', 'You add a prepaid balance. When a request is handled, the service fee is deducted from your balance. You can see every deduction in My Page.'],
+      ['Can I get a refund for unused balance?', 'Yes. This prototype displays a refundable unused balance message. Actual refund policy can be adjusted later.'],
+      ['What kind of requests can I submit?', 'Restaurant reservations, clinic appointments, ticket inquiries, delivery issues, local business calls, travel changes and general Korea-related calls.'],
+      ['Is this real-time interpretation?', 'This service is designed mainly for request-based call handling and reservation support. Real-time interpretation can be added as a premium option later.'],
+      ['Can I check reservation details later?', 'Yes. Confirmed reservation details are saved in My Page with date, place, assistant note and used deposit amount.']
+    ];
+
     let state = {
-      page:"list",
-      category:"전체",
-      selectedProductId:products[0].id,
-      qty:1,
-      pendingOrder:null,
-      lastOrder:null
+      user: getStoredJson(STORAGE.user, null),
+      requests: getStoredJson(STORAGE.requests, DEFAULT_REQUESTS),
+      balance: Number(localStorage.getItem(STORAGE.balance) || DEFAULT_BALANCE)
     };
 
-    function money(value) {
-      return Number(value).toLocaleString("ko-KR") + "원";
-    }
-
-    function discountRate(product) {
-      if (!product.originalPrice || product.originalPrice <= product.price) return 0;
-      return Math.round((1 - product.price / product.originalPrice) * 100);
-    }
-
-    function getSelectedProduct() {
-      return products.find(p => p.id === state.selectedProductId) || products[0];
-    }
-
-    function getOrders() {
+    function getStoredJson(key, fallback) {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      } catch (e) {
-        return [];
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (error) {
+        return fallback;
       }
     }
 
-    function saveOrders(orders) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+    function saveState() {
+      localStorage.setItem(STORAGE.requests, JSON.stringify(state.requests));
+      localStorage.setItem(STORAGE.balance, String(state.balance));
+      if (state.user) localStorage.setItem(STORAGE.user, JSON.stringify(state.user));
+      else localStorage.removeItem(STORAGE.user);
     }
 
-    function setPage(page) {
-      state.page = page;
-
-      document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
-      document.getElementById(page + "Page").classList.add("active");
-
-      document.getElementById("listControls").style.display = page === "list" ? "block" : "none";
-      document.getElementById("fixedBuy").classList.toggle("show", page === "detail");
-
-      window.scrollTo({ top:0, behavior:"smooth" });
+    function formatWon(value) {
+      return '₩' + Number(value || 0).toLocaleString('ko-KR');
     }
 
-    function renderTabs() {
-      const wrap = document.getElementById("categoryTabs");
-
-      wrap.innerHTML = categories.map(cat => `
-        <button class="tab ${state.category === cat ? "active" : ""}" onclick="setCategory('${cat}')">
-          ${cat}
-        </button>
-      `).join("");
+    function statusClass(status) {
+      const s = String(status).toLowerCase();
+      if (s.includes('confirm')) return 'confirmed';
+      if (s.includes('progress')) return 'progress';
+      if (s.includes('pending')) return 'pending';
+      if (s.includes('cancel')) return 'cancelled';
+      return 'completed';
     }
 
-    function setCategory(category) {
-      state.category = category;
-      renderTabs();
-      renderProducts();
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      }[char]));
     }
 
-    function renderProducts() {
-      const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+    function openModal(id) {
+      closeMobileMenu();
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.add('open');
+      document.body.classList.add('modal-open');
+    }
 
-      const filtered = products.filter(p => {
-        const matchCategory = state.category === "전체" || p.category === state.category;
-        const text = [
-          p.name,
-          p.brand,
-          p.category,
-          p.description,
-          p.curatorName,
-          p.curatorLine
-        ].join(" ").toLowerCase();
+    function closeModal(modal) {
+      modal.classList.remove('open');
+      if (!document.querySelector('.modal-backdrop.open')) document.body.classList.remove('modal-open');
+    }
 
-        return matchCategory && (!keyword || text.includes(keyword));
-      });
+    function closeAllModals() {
+      document.querySelectorAll('.modal-backdrop.open').forEach(closeModal);
+    }
 
-      document.getElementById("productCount").textContent = `${filtered.length}개 상품`;
+    function showToast(message) {
+      const wrap = document.getElementById('toastWrap');
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = message;
+      wrap.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(8px)';
+        setTimeout(() => el.remove(), 200);
+      }, 2600);
+    }
 
-      const grid = document.getElementById("productGrid");
-
-      if (!filtered.length) {
-        grid.innerHTML = `<div class="empty">검색 조건에 맞는 상품이 없습니다.</div>`;
-        return;
-      }
-
-      grid.innerHTML = filtered.map(p => {
-        const dc = discountRate(p);
-
-        return `
-          <article class="product-card">
-            <div class="thumb" style="--visual:${p.visual}">
-              <div class="badges">
-                <span class="badge hot">공동구매 특가</span>
-                <span class="badge blue">${p.curatorName} 추천</span>
-              </div>
-              <div class="emoji">${p.emoji}</div>
-            </div>
-
-            <div class="card-body">
-              <div class="category-line">
-                <span class="category">${p.category} · ${p.brand}</span>
-                <span class="rating">★ ${p.rating}</span>
-              </div>
-
-              <h3 class="product-title">${p.name}</h3>
-              <p class="desc">${p.description}</p>
-
-              ${dc ? `<div class="original">${money(p.originalPrice)}</div>` : ""}
-              <div class="price-row">
-                <div class="price">${dc ? `<span style="color:#f04452;font-size:18px;margin-right:4px;">${dc}%</span>` : ""}${money(p.price)}</div>
-                <div class="stock">남은 수량 ${p.stock}개</div>
-              </div>
-
-              <div class="curator">“${p.curatorLine}”</div>
-
-              <button class="btn btn-primary" onclick="openProduct('${p.id}')">상세보기</button>
-            </div>
-          </article>
+    function renderNav() {
+      const navActions = document.getElementById('navActions');
+      const mobileToggle = '<button class="mobile-toggle" type="button" id="mobileToggle" aria-label="Open mobile menu">☰</button>';
+      if (state.user) {
+        navActions.innerHTML = `
+          <button class="btn btn-ghost desktop-only" type="button" data-open-mypage>My Page</button>
+          <button class="btn btn-dark" type="button" id="logoutBtn">Logout</button>
+          ${mobileToggle}
         `;
-      }).join("");
-    }
-
-    function openProduct(productId) {
-      state.selectedProductId = productId;
-      state.qty = 1;
-      renderDetail();
-      setPage("detail");
-    }
-
-    function renderDetail() {
-      const p = getSelectedProduct();
-      const dc = discountRate(p);
-      const total = p.price * state.qty;
-
-      document.getElementById("detailVisual").style.setProperty("--visual", p.visual);
-      document.getElementById("detailEmoji").textContent = p.emoji;
-
-      document.getElementById("detailChips").innerHTML = `
-        <span class="chip">공동구매 특가</span>
-        <span class="chip gray">${p.category}</span>
-        <span class="chip gray">${p.brand}</span>
-        ${dc ? `<span class="chip gray">${dc}% 할인 느낌</span>` : ""}
-      `;
-
-      document.getElementById("detailTitle").textContent = p.name;
-      document.getElementById("detailDesc").textContent = p.description;
-      document.getElementById("detailOriginal").textContent = p.originalPrice ? money(p.originalPrice) : "";
-      document.getElementById("detailPrice").textContent = money(p.price);
-      document.getElementById("detailShipping").textContent = p.shipping;
-      document.getElementById("detailSource").textContent = p.sourceName;
-      document.getElementById("detailDeadline").textContent = p.deadline;
-      document.getElementById("detailStock").textContent = `${p.stock}개`;
-      document.getElementById("detailQty").textContent = state.qty;
-      document.getElementById("detailTotal").textContent = money(total);
-      document.getElementById("fixedTotal").textContent = money(total);
-
-      const sourceLink = document.getElementById("sourceLink");
-      if (p.sourceUrl && p.sourceUrl !== "#") {
-        sourceLink.href = p.sourceUrl;
-        sourceLink.style.display = "inline-flex";
       } else {
-        sourceLink.href = "#";
-        sourceLink.style.display = "none";
+        navActions.innerHTML = `
+          <button class="btn btn-ghost desktop-only" type="button" data-open-login>Log in</button>
+          <button class="btn btn-primary" type="button" data-open-signup>Get Started</button>
+          ${mobileToggle}
+        `;
       }
-
-      document.getElementById("curatorTitle").textContent = `${p.curatorName} 큐레이터가 추천합니다`;
-      document.getElementById("curatorDesc").textContent = p.curatorDesc;
-
-      document.getElementById("detailBanner").style.setProperty("--visual", p.visual);
-      document.getElementById("detailBanner").innerHTML = `
-        <div>
-          <div class="big">${p.emoji}</div>
-          <h3>${p.name}</h3>
-          <p>${p.description}</p>
-        </div>
-      `;
-
-      document.getElementById("featureGrid").innerHTML = p.features.map((text, index) => `
-        <div class="feature">
-          <strong>${index + 1}</strong>. ${text}
-        </div>
-      `).join("");
-
-      document.getElementById("detailTextList").innerHTML = p.detailTexts.map(text => `
-        <li>${text}</li>
-      `).join("");
+      bindDynamicActions();
     }
 
-    function changeQty(delta) {
-      const p = getSelectedProduct();
-      state.qty = Math.max(1, Math.min(p.stock, state.qty + delta));
-      renderDetail();
-    }
-
-    function goList() {
-      setPage("list");
-      renderProducts();
-    }
-
-    function goDetail() {
-      renderDetail();
-      setPage("detail");
-    }
-
-    function goOrderForm() {
-      const p = getSelectedProduct();
-
-      setPage("form");
-
-      document.getElementById("formQty").value = String(state.qty);
-      document.getElementById("formProductPrice").textContent = money(p.price);
-      document.getElementById("formSummaryQty").textContent = `${state.qty}개`;
-      document.getElementById("formTotal").textContent = money(p.price * state.qty);
-      document.getElementById("formError").classList.remove("show");
-    }
-
-    function syncFormQty() {
-      state.qty = Number(document.getElementById("formQty").value);
-      const p = getSelectedProduct();
-
-      document.getElementById("formSummaryQty").textContent = `${state.qty}개`;
-      document.getElementById("formTotal").textContent = money(p.price * state.qty);
-    }
-
-    function showError(message) {
-      const error = document.getElementById("formError");
-      error.textContent = message;
-      error.classList.add("show");
-      error.scrollIntoView({ behavior:"smooth", block:"center" });
-    }
-
-    function validateAndGoConfirm() {
-      const p = getSelectedProduct();
-
-      const buyerName = document.getElementById("buyerName").value.trim();
-      const phone = document.getElementById("buyerPhone").value.trim();
-      const address = document.getElementById("buyerAddress").value.trim();
-      const addressDetail = document.getElementById("buyerAddressDetail").value.trim();
-      const request = document.getElementById("buyerRequest").value.trim();
-      const agree = document.getElementById("agreePrivacy").checked;
-
-      if (!buyerName) return showError("구매자 이름을 입력해주세요.");
-      if (!phone) return showError("연락처를 입력해주세요.");
-      if (!address) return showError("주소를 입력해주세요.");
-      if (!agree) return showError("개인정보 수집·이용 동의가 필요합니다.");
-
-      state.pendingOrder = {
-        productName:p.name,
-        productId:p.id,
-        brand:p.brand,
-        buyerName,
-        phone,
-        address:`${address} ${addressDetail}`.trim(),
-        quantity:state.qty,
-        totalAmount:p.price * state.qty,
-        curatorName:p.curatorName,
-        curatorId:p.curatorId,
-        curatorLine:p.curatorLine,
-        request
-      };
-
-      renderConfirm();
-      setPage("confirm");
-    }
-
-    function confirmItem(label, value) {
-      return `
-        <div class="confirm-item">
-          <span>${label}</span>
-          <strong>${value || "-"}</strong>
-        </div>
-      `;
-    }
-
-    function renderConfirm() {
-      const o = state.pendingOrder;
-
-      document.getElementById("confirmList").innerHTML = `
-        ${confirmItem("상품명", o.productName)}
-        ${confirmItem("브랜드", o.brand)}
-        ${confirmItem("수량", o.quantity + "개")}
-        ${confirmItem("총 주문 금액", money(o.totalAmount))}
-        ${confirmItem("구매자 이름", o.buyerName)}
-        ${confirmItem("연락처", o.phone)}
-        ${confirmItem("주소", o.address)}
-        ${confirmItem("담당 큐레이터", o.curatorName)}
-        ${confirmItem("추천 문구", "“" + o.curatorLine + "”")}
-        ${confirmItem("요청사항", o.request || "-")}
-      `;
-    }
-
-    function completeOrder() {
-      if (!state.pendingOrder) {
-        goList();
-        return;
-      }
-
-      const p = getSelectedProduct();
-      const now = new Date();
-      const orderNo = "GB" +
-        now.getFullYear() +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        String(now.getDate()).padStart(2, "0") +
-        "-" +
-        Math.floor(100000 + Math.random() * 900000);
-
-      const order = {
-        orderNo,
-        productName:state.pendingOrder.productName,
-        productId:state.pendingOrder.productId,
-        brand:state.pendingOrder.brand,
-        buyerName:state.pendingOrder.buyerName,
-        phone:state.pendingOrder.phone,
-        address:state.pendingOrder.address,
-        quantity:state.pendingOrder.quantity,
-        totalAmount:state.pendingOrder.totalAmount,
-        curatorName:state.pendingOrder.curatorName,
-        curatorId:state.pendingOrder.curatorId,
-        curatorLine:state.pendingOrder.curatorLine,
-        request:state.pendingOrder.request,
-        orderStatus:"주문접수",
-        orderDate:now.toLocaleString("ko-KR"),
-        commissionRate:p.commissionRate,
-        expectedCommission:Math.round(p.price * state.pendingOrder.quantity * p.commissionRate)
-      };
-
-      const orders = getOrders();
-      orders.unshift(order);
-      saveOrders(orders);
-
-      state.lastOrder = order;
-      state.pendingOrder = null;
-
-      renderComplete();
-      setPage("complete");
-    }
-
-    function renderComplete() {
-      const o = state.lastOrder;
-
-      document.getElementById("completeSummary").innerHTML = `
-        ${confirmItem("주문번호", o.orderNo)}
-        ${confirmItem("상품명", o.productName)}
-        ${confirmItem("브랜드", o.brand)}
-        ${confirmItem("수량", o.quantity + "개")}
-        ${confirmItem("총 주문 금액", money(o.totalAmount))}
-        ${confirmItem("큐레이터", o.curatorName)}
-      `;
-    }
-
-    function goOrders() {
-      renderOrders();
-      setPage("orders");
-    }
-
-    function renderOrders() {
-      const orders = getOrders();
-      const wrap = document.getElementById("ordersList");
-
-      if (!orders.length) {
-        wrap.innerHTML = `<div class="empty">아직 저장된 주문 내역이 없습니다.</div>`;
-        return;
-      }
-
-      wrap.innerHTML = orders.map(o => `
-        <article class="order-card">
-          <h3>${o.productName}</h3>
-          <div class="order-meta">
-            <div>주문번호: ${o.orderNo}</div>
-            <div>브랜드: ${o.brand || "-"}</div>
-            <div>주문자: ${o.buyerName} · ${o.phone}</div>
-            <div>수량/금액: ${o.quantity}개 · ${money(o.totalAmount)}</div>
-            <div>상태: ${o.orderStatus} · 주문일: ${o.orderDate}</div>
-            <div>큐레이터: ${o.curatorName} · 커미션 예정액: ${money(o.expectedCommission)}</div>
-            <div>주소: ${o.address}</div>
-            <div>요청사항: ${o.request || "-"}</div>
-          </div>
+    function renderServices() {
+      const grid = document.getElementById('serviceGrid');
+      grid.innerHTML = services.map(service => `
+        <article class="card service-card">
+          <div class="icon-box">${service.icon}</div>
+          <h3>${service.title}</h3>
+          <p>${service.desc}</p>
+          <ul>${service.items.map(item => `<li>${item}</li>`).join('')}</ul>
+          <button class="btn btn-ghost" type="button" data-service-request="${service.category}">Request this</button>
         </article>
-      `).join("");
+      `).join('');
     }
 
-    function clearOrders() {
-      if (!confirm("저장된 mock 주문 내역을 모두 삭제할까요?")) return;
-      localStorage.removeItem(STORAGE_KEY);
-      renderOrders();
+    function getSummary() {
+      const totalUsed = state.requests.reduce((sum, item) => sum + Number(item.usedAmount || 0), 0);
+      const active = state.requests.filter(item => ['In Progress', 'Pending'].includes(item.status)).length;
+      const completed = state.requests.filter(item => ['Completed', 'Confirmed'].includes(item.status)).length;
+      return { totalUsed, active, completed };
     }
 
-    renderTabs();
-    renderProducts();
-  </script>
-</body>
+    function renderDashCards(targetId) {
+      const target = document.getElementById(targetId);
+      const { totalUsed, active, completed } = getSummary();
+      const name = state.user?.name || DEFAULT_USER.name;
+      target.innerHTML = `
+        <div class="dash-mini"><span>User name</span><b>${escapeHtml(name)}</b></div>
+        <div class="dash-mini"><span>Current Deposit</span><b>${formatWon(state.balance)}</b></div>
+        <div class="dash-mini"><span>Total Used</span><b>${formatWon(totalUsed)}</b></div>
+        <div class="dash-mini"><span>Active / Completed</span><b>${active} / ${completed}</b></div>
+      `;
+    }
+
+    function renderRequestRows(targetId) {
+      const target = document.getElementById(targetId);
+      target.innerHTML = state.requests.map((req, index) => `
+        <tr>
+          <td><strong>${escapeHtml(req.id)}</strong></td>
+          <td>${escapeHtml(req.date)}</td>
+          <td>${escapeHtml(req.category)}</td>
+          <td>${escapeHtml(req.summary)}</td>
+          <td><span class="badge ${statusClass(req.status)}">${escapeHtml(req.status)}</span></td>
+          <td>${formatWon(req.usedAmount)}</td>
+          <td><button class="text-btn" type="button" data-detail-index="${index}">View</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderMypage() {
+      document.getElementById('heroBalance').textContent = formatWon(state.balance);
+      renderDashCards('previewDashCards');
+      renderDashCards('modalDashCards');
+      renderRequestRows('previewRequestRows');
+      renderRequestRows('modalRequestRows');
+    }
+
+    function renderFaqs() {
+      const list = document.getElementById('faqList');
+      list.innerHTML = faqs.map(([q, a], index) => `
+        <div class="faq-item ${index === 0 ? 'open' : ''}">
+          <button class="faq-q" type="button" aria-expanded="${index === 0 ? 'true' : 'false'}">
+            <span>${q}</span><strong>+</strong>
+          </button>
+          <div class="faq-a"><p>${a}</p></div>
+        </div>
+      `).join('');
+    }
+
+    function openDetail(index) {
+      const req = state.requests[index];
+      if (!req) return;
+      const remainingAfter = Math.max(0, state.balance + Number(req.usedAmount || 0));
+      document.getElementById('detailBody').innerHTML = `
+        <div class="detail-grid">
+          <div class="detail-box"><span>Request ID</span><b>${escapeHtml(req.id)}</b></div>
+          <div class="detail-box"><span>Status</span><b><span class="badge ${statusClass(req.status)}">${escapeHtml(req.status)}</span></b></div>
+          <div class="detail-box"><span>Category</span><b>${escapeHtml(req.category)}</b></div>
+          <div class="detail-box"><span>Submitted At</span><b>${escapeHtml(req.date)}</b></div>
+          <div class="detail-box"><span>Reservation Name</span><b>${escapeHtml(state.user?.name || DEFAULT_USER.name)}</b></div>
+          <div class="detail-box"><span>Business Name</span><b>${escapeHtml(req.place)}</b></div>
+          <div class="detail-box"><span>Date / Time</span><b>${escapeHtml(req.reservationDate)} · ${escapeHtml(req.reservationTime)}</b></div>
+          <div class="detail-box"><span>Phone Number</span><b>${escapeHtml(req.phone)}</b></div>
+          <div class="detail-box full"><span>Address</span><b>${escapeHtml(req.address)}</b></div>
+          <div class="detail-box"><span>Deposit Used</span><b>${formatWon(req.usedAmount)}</b></div>
+          <div class="detail-box"><span>Balance After Request</span><b>${formatWon(remainingAfter)}</b></div>
+          <div class="detail-box full"><span>Assistant Note</span><b>${escapeHtml(req.assistantNote)}</b></div>
+          <div class="detail-box full"><span>User Memo</span><b>${escapeHtml(req.memo)}</b></div>
+          <div class="detail-box full"><span>Timeline</span><b>${(req.timeline || []).map(item => '✓ ' + escapeHtml(item)).join('<br>')}</b></div>
+        </div>
+      `;
+      openModal('detailModal');
+    }
+
+    function handleAuth(user) {
+      state.user = user;
+      if (!localStorage.getItem(STORAGE.requests)) state.requests = DEFAULT_REQUESTS;
+      if (!localStorage.getItem(STORAGE.balance)) state.balance = DEFAULT_BALANCE;
+      saveState();
+      renderNav();
+      renderMypage();
+      closeAllModals();
+      showToast(`Welcome, ${user.name}.`);
+    }
+
+    function submitRequest(event) {
+      event.preventDefault();
+      if (!state.user) {
+        showToast('Please log in before submitting a request.');
+        openModal('loginModal');
+        return;
+      }
+
+      const nextNumber = 1043 + state.requests.length;
+      const used = 2000;
+      const today = new Date().toISOString().slice(0, 10);
+      const newRequest = {
+        id: '#' + nextNumber,
+        date: today,
+        category: document.getElementById('requestCategory').value,
+        summary: document.getElementById('requestSummary').value.trim(),
+        status: 'Pending',
+        usedAmount: used,
+        place: document.getElementById('requestPlace').value.trim() || 'Pending',
+        address: document.getElementById('requestLocation').value.trim() || 'Pending',
+        phone: document.getElementById('requestPhone').value.trim() || 'Pending',
+        reservationDate: document.getElementById('requestDate').value || 'Pending',
+        reservationTime: document.getElementById('requestTime').value || 'Pending',
+        assistantNote: 'Request submitted successfully. An assistant will review the details before calling.',
+        memo: document.getElementById('requestMemo').value.trim() || 'No memo provided.',
+        timeline: ['Request submitted', 'Waiting for assistant review']
+      };
+
+      state.requests.unshift(newRequest);
+      state.balance = Math.max(0, state.balance - used);
+      saveState();
+      renderMypage();
+      event.target.reset();
+      closeAllModals();
+      showToast('Request submitted successfully. ₩2,000 mock fee deducted.');
+      openModal('mypageModal');
+    }
+
+    function bindDynamicActions() {
+      document.querySelectorAll('[data-open-login]').forEach(btn => btn.onclick = () => openModal('loginModal'));
+      document.querySelectorAll('[data-open-signup]').forEach(btn => btn.onclick = () => openModal('signupModal'));
+      document.querySelectorAll('[data-open-mypage]').forEach(btn => btn.onclick = () => {
+        if (!state.user) {
+          showToast('Please log in to view My Page.');
+          openModal('loginModal');
+        } else {
+          renderMypage();
+          openModal('mypageModal');
+        }
+      });
+      document.querySelectorAll('[data-open-request]').forEach(btn => btn.onclick = () => openModal('requestModal'));
+      document.querySelectorAll('[data-payment]').forEach(btn => btn.onclick = () => showToast('Prototype: payment system will be connected later.'));
+      document.querySelectorAll('[data-service-request]').forEach(btn => btn.onclick = () => {
+        document.getElementById('requestCategory').value = btn.dataset.serviceRequest;
+        document.getElementById('requestSummary').value = btn.dataset.serviceRequest + ' request';
+        openModal('requestModal');
+      });
+      document.querySelectorAll('[data-detail-index]').forEach(btn => btn.onclick = () => openDetail(Number(btn.dataset.detailIndex)));
+
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.onclick = () => {
+          state.user = null;
+          saveState();
+          renderNav();
+          showToast('Logged out.');
+        };
+      }
+
+      const mobileToggle = document.getElementById('mobileToggle');
+      if (mobileToggle) mobileToggle.onclick = () => document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    function closeMobileMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
+    }
+
+    document.addEventListener('click', event => {
+      const modal = event.target.closest('[data-modal]');
+      if (event.target.matches('[data-modal]')) closeModal(event.target);
+      if (event.target.matches('[data-close]')) closeModal(event.target.closest('[data-modal]'));
+      if (event.target.matches('.mobile-menu a')) closeMobileMenu();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeAllModals();
+    });
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('header').classList.toggle('scrolled', window.scrollY > 12);
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      if (!email || !password) return showToast('Please enter email and password.');
+      const name = email.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+      handleAuth({ ...DEFAULT_USER, name, email });
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value.trim();
+      if (!name || !email || !password) return showToast('Please fill in required fields.');
+      handleAuth({
+        name,
+        email,
+        preferredLanguage: document.getElementById('signupLang').value,
+        country: document.getElementById('signupCountry').value.trim() || 'Not set'
+      });
+    });
+
+    document.getElementById('requestForm').addEventListener('submit', submitRequest);
+    document.getElementById('refundBtn').addEventListener('click', () => showToast('Refund request saved as prototype action.'));
+
+    document.getElementById('faqList').addEventListener('click', event => {
+      const btn = event.target.closest('.faq-q');
+      if (!btn) return;
+      const item = btn.closest('.faq-item');
+      item.classList.toggle('open');
+      btn.setAttribute('aria-expanded', item.classList.contains('open') ? 'true' : 'false');
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', () => closeMobileMenu());
+    });
+
+    renderServices();
+    renderFaqs();
+    renderNav();
+    renderMypage();
+    bindDynamicActions();
+  </script></body>
 </html>
